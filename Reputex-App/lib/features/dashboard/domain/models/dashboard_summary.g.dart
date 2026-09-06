@@ -20,6 +20,16 @@ _DashboardSummary _$DashboardSummaryFromJson(Map<String, dynamic> json) =>
       pendingResponsesCount:
           (json['pending_responses_count'] as num?)?.toInt() ?? 0,
       fraudAlertsCount: (json['fraud_alerts_count'] as num?)?.toInt() ?? 0,
+      crisisRiskLevel: json['crisis_risk_level'] as String? ?? 'Normal',
+      suspiciousReviewsCount:
+          (json['suspicious_reviews_count'] as num?)?.toInt() ?? 0,
+      activeClustersCount:
+          (json['active_clusters_count'] as num?)?.toInt() ?? 0,
+      topIssues:
+          (json['top_issues'] as List<dynamic>?)
+              ?.map((e) => e as Map<String, dynamic>)
+              .toList() ??
+          const [],
       recentMentions:
           (json['recent_mentions'] as List<dynamic>?)
               ?.map((e) => Mention.fromJson(e as Map<String, dynamic>))
@@ -36,5 +46,9 @@ Map<String, dynamic> _$DashboardSummaryToJson(_DashboardSummary instance) =>
       'crisis_count': instance.crisisCount,
       'pending_responses_count': instance.pendingResponsesCount,
       'fraud_alerts_count': instance.fraudAlertsCount,
+      'crisis_risk_level': instance.crisisRiskLevel,
+      'suspicious_reviews_count': instance.suspiciousReviewsCount,
+      'active_clusters_count': instance.activeClustersCount,
+      'top_issues': instance.topIssues,
       'recent_mentions': instance.recentMentions,
     };

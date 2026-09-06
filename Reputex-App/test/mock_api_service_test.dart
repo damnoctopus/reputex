@@ -113,5 +113,48 @@ void main() {
       final dispatched = await api.dispatchResponse(draft.id);
       expect(dispatched.status, 'dispatched');
     });
+
+    test('scan workflow can trigger scan and fetch status', () async {
+      final scanResult = await api.triggerScan();
+      expect(scanResult['status'], 'completed');
+
+      final status = await api.getScanStatus();
+      expect(status['status'], 'completed');
+      expect(status['active_platforms'], contains('Google'));
+    });
+
+    test('customer issues can be fetched and retrieved by ID', () async {
+      final issues = await api.getIssues();
+      expect(issues, isNotEmpty);
+      expect(issues.first.category, isNotEmpty);
+      expect(issues.first.mentionCount, greaterThan(0));
+
+      final issue = await api.getIssueById(issues.first.id);
+      expect(issue.id, issues.first.id);
+      expect(issue.subtopic, issues.first.subtopic);
+      expect(issue.platformsBreakdown, isNotEmpty);
+    });
+
+    test('findings, suspicious reviews and clusters can be retrieved', () async {
+      final findings = await api.getFindings();
+      expect(findings, isNotEmpty);
+
+      final suspicious = await api.getSuspiciousReviews();
+      expect(suspicious, isNotEmpty);
+      expect(suspicious.first.findingType, 'review_authenticity');
+      expect(suspicious.first.metadataJson['signals'], isNotNull);
+
+      final clusters = await api.getManipulationClusters();
+      expect(clusters, isNotEmpty);
+      expect(clusters.first.findingType, 'manipulation_cluster');
+    });
+
+    test('dashboard summary includes customer issues and manipulation count', () async {
+      final summary = await api.getDashboardSummary();
+      expect(summary.topIssues, isNotEmpty);
+      expect(summary.suspiciousReviewsCount, greaterThan(0));
+      expect(summary.activeClustersCount, greaterThan(0));
+      expect(summary.crisisRiskLevel, 'High Risk');
+    });
   });
 }

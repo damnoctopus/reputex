@@ -33,6 +33,15 @@ class BusinessRepository(BaseRepository[Business]):
         )
         return result.scalars().first()
 
+    async def user_has_access(self, business_id: str, user_id: str) -> bool:
+        biz = await self.get_by_id(business_id)
+        if not biz:
+            return False
+        if biz.owner_id == user_id:
+            return True
+        member = await self.get_user_member_record(business_id, user_id)
+        return member is not None
+
     async def add_member(self, business_id: str, user_id: str, role: str = "owner") -> BusinessMember:
         member = BusinessMember(business_id=business_id, user_id=user_id, role=role)
         self.db.add(member)

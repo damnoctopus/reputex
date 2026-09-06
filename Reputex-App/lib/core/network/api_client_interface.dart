@@ -8,7 +8,9 @@ import '../../features/dashboard/domain/models/platform_statistics.dart';
 import '../../features/dashboard/domain/models/reputation_score.dart';
 import '../../features/dashboard/domain/models/sentiment_distribution.dart';
 import '../../features/dashboard/domain/models/sentiment_trend.dart';
+import '../../features/findings/domain/models/finding_item.dart';
 import '../../features/fraud/domain/models/fraud_result.dart';
+import '../../features/issues/domain/models/customer_issue.dart';
 import '../../features/mentions/domain/models/mention.dart';
 import '../../features/mentions/domain/models/mentions_filter.dart';
 import '../../features/mentions/domain/models/paginated_mentions.dart';
@@ -114,4 +116,28 @@ abstract class IApiService {
   });
 
   Future<ResponseDraft> dispatchResponse(String id);
+
+  // ── Full Platform Scan ──
+  Future<Map<String, dynamic>> triggerScan();
+
+  Future<Map<String, dynamic>> getScanStatus();
+
+  // ── Customer Issues & Complaints ──
+  Future<List<CustomerIssue>> getIssues({
+    String? category,
+    String? severity,
+    String? status,
+  });
+
+  Future<CustomerIssue> getIssueById(String id);
+
+  // ── Findings & Review Authenticity ──
+  Future<List<FindingItem>> getFindings({
+    String? type,
+    String? severity,
+  });
+
+  Future<List<FindingItem>> getSuspiciousReviews();
+
+  Future<List<FindingItem>> getManipulationClusters();
 }

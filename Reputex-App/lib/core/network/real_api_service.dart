@@ -8,7 +8,9 @@ import '../../features/dashboard/domain/models/platform_statistics.dart';
 import '../../features/dashboard/domain/models/reputation_score.dart';
 import '../../features/dashboard/domain/models/sentiment_distribution.dart';
 import '../../features/dashboard/domain/models/sentiment_trend.dart';
+import '../../features/findings/domain/models/finding_item.dart';
 import '../../features/fraud/domain/models/fraud_result.dart';
+import '../../features/issues/domain/models/customer_issue.dart';
 import '../../features/mentions/domain/models/mention.dart';
 import '../../features/mentions/domain/models/mentions_filter.dart';
 import '../../features/mentions/domain/models/paginated_mentions.dart';
@@ -323,5 +325,88 @@ class RealApiService implements IApiService {
       '${ApiConstants.responses}/$id/dispatch',
     );
     return ResponseDraft.fromJson(response.data as Map<String, dynamic>);
+  }
+
+  // ── Full Platform Scan ──
+  @override
+  Future<Map<String, dynamic>> triggerScan() async {
+    final response = await _client.post('/business/scan');
+    return response.data as Map<String, dynamic>;
+  }
+
+  @override
+  Future<Map<String, dynamic>> getScanStatus() async {
+    final response = await _client.get('/business/scan/status');
+    return response.data as Map<String, dynamic>;
+  }
+
+  // ── Customer Issues & Complaints ──
+  @override
+  Future<List<CustomerIssue>> getIssues({
+    String? category,
+    String? severity,
+    String? status,
+  }) async {
+    final queryParams = <String, dynamic>{};
+    if (category != null) queryParams['category'] = category;
+    if (severity != null) queryParams['severity'] = severity;
+    if (status != null) queryParams['status'] = status;
+
+    final response = await _client.get(
+      '/issues',
+      queryParameters: queryParams,
+    );
+    final data = response.data as Map<String, dynamic>;
+    final items = data['items'] as List<dynamic>? ?? [];
+    return items
+        .map((e) => CustomerIssue.fromJson(e as Map<String, dynamic>))
+        .toList();
+  }
+
+  @override
+  Future<CustomerIssue> getIssueById(String id) async {
+    final response = await _client.get('/issues/$id');
+    return CustomerIssue.fromJson(response.data as Map<String, dynamic>);
+  }
+
+  // ── Findings & Review Authenticity ──
+  @override
+  Future<List<FindingItem>> getFindings({
+    String? type,
+    String? severity,
+  }) async {
+    final queryParams = <String, dynamic>{};
+    if (type != null) queryParams['finding_type'] = type;
+    if (severity != null) queryParams['severity'] = severity;
+
+    final response = await _client.get(
+      '/findings',
+      queryParameters: queryParams,
+    );
+    final data = response.data as Map<String, dynamic>;
+    final items = data['items'] as List<dynamic>? ?? [];
+    return items
+        .map((e) => FindingItem.fromJson(e as Map<String, dynamic>))
+        .toList();
+  }
+
+  @override
+  Future<List<FindingItem>> getSuspiciousReviews() async {
+    final response = await _client.get('/suspicious-reviews');
+    final data = response.data as Map<String, dynamic>;
+    final items = data['items'] as List<dynamic>? ?? [];
+    return items
+        .map((e) => FindingItem.fromJson(e as Map<String, dynamic>))
+        .toList();
+  }
+
+  @override
+  Future<List<FindingItem>> getManipulationClusters() async {
+    final response = await _client.get('/manipulation-clusters');
+    final data = response.data as Map<String, dynamic>;
+    final items = data['items'] as List<dynamic>? ?? [];
+    return items
+        .map((e) => FindingItem.fromJson(e as Map<String, dynamic>))
+        .toList();
   }
 }

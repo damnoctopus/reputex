@@ -1,0 +1,13 @@
+{
+  "success": true,
+  "data": {
+    "markdown": "# Spice Symphony Experience\n\nReally enjoyed the dining experience at Spice Symphony. Great seating and hot food.\n\nPosted on 2026-08-19",
+    "metadata": {
+      "title": "Spice Symphony Experience",
+      "description": "Really enjoyed the dining experience at Spice Symphony.",
+      "sourceURL": "https://example.com/review/123",
+      "statusCode": 200,
+      "article:published_time": "2026-08-19T12:00:00Z"
+    }
+  }
+}

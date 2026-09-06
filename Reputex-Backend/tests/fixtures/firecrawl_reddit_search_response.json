@@ -1,0 +1,47 @@
+{
+  "success": true,
+  "data": [
+    {
+      "url": "https://www.reddit.com/r/bangalore/comments/18xyzab/spice_symphony_honest_review_great_food_slow_service/",
+      "title": "Spice Symphony honest review - great food, slow service : r/bangalore",
+      "description": "Visited Spice Symphony last weekend. The biryani and butter chicken were top notch, but the staff took 45 minutes just to bring our drinks.",
+      "markdown": "# Spice Symphony honest review - great food, slow service\n\nPosted by u/bangalore_foodie on 2026-08-15\n\nVisited Spice Symphony last weekend with colleagues. The biryani and butter chicken were top notch and truly delicious, but the customer service was quite slow. The waiters seemed overwhelmed and it took 45 minutes just to bring our drinks.\n\n42 points · 18 comments",
+      "metadata": {
+        "title": "Spice Symphony honest review - great food, slow service : r/bangalore",
+        "description": "Visited Spice Symphony last weekend. The biryani and butter chicken were top notch...",
+        "sourceURL": "https://www.reddit.com/r/bangalore/comments/18xyzab/spice_symphony_honest_review_great_food_slow_service/",
+        "statusCode": 200,
+        "author": "bangalore_foodie",
+        "article:published_time": "2026-08-15T18:45:00Z"
+      }
+    },
+    {
+      "url": "https://www.reddit.com/r/indianfood/comments/18xyzab/spice_symphony_honest_review_great_food_slow_service/k9z1234/",
+      "title": "Comment on Spice Symphony review : r/indianfood",
+      "description": "Can confirm the service delay. We faced the same issue when we visited on a Friday evening.",
+      "markdown": "Can confirm the customer service delay. We faced the exact same issue when we visited on a Friday evening. Food is great though!\n\n12 points · 3 comments",
+      "metadata": {
+        "title": "Comment on Spice Symphony review : r/indianfood",
+        "description": "Can confirm the service delay. We faced the same issue...",
+        "sourceURL": "https://www.reddit.com/r/indianfood/comments/18xyzab/spice_symphony_honest_review_great_food_slow_service/k9z1234/",
+        "statusCode": 200,
+        "author": "curry_connoisseur",
+        "article:published_time": "2026-08-16T10:15:30Z"
+      }
+    },
+    {
+      "url": "https://www.reddit.com/r/bangalore/comments/19abcde/hidden_billing_charges_at_spice_symphony/",
+      "title": "Hidden billing charges at Spice Symphony : r/bangalore",
+      "description": "Watch out for your bill at Spice Symphony. They added extra mandatory service charges and an unexpected packaging fee.",
+      "markdown": "# Hidden billing charges at Spice Symphony\n\nPosted by u/consumer_watchdog on 2026-08-22\n\nWatch out for your bill when dining at Spice Symphony. They added extra mandatory service charges and an unexpected packaging fee that wasn't mentioned on the menu.\n\n35 points · 24 comments",
+      "metadata": {
+        "title": "Hidden billing charges at Spice Symphony : r/bangalore",
+        "description": "Watch out for your bill at Spice Symphony. They added extra mandatory service charges...",
+        "sourceURL": "https://www.reddit.com/r/bangalore/comments/19abcde/hidden_billing_charges_at_spice_symphony/",
+        "statusCode": 200,
+        "author": "consumer_watchdog",
+        "article:published_time": "2026-08-22T14:10:00Z"
+      }
+    }
+  ]
+}

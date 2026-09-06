@@ -8,7 +8,9 @@ import '../../features/dashboard/domain/models/platform_statistics.dart';
 import '../../features/dashboard/domain/models/reputation_score.dart';
 import '../../features/dashboard/domain/models/sentiment_distribution.dart';
 import '../../features/dashboard/domain/models/sentiment_trend.dart';
+import '../../features/findings/domain/models/finding_item.dart';
 import '../../features/fraud/domain/models/fraud_result.dart';
+import '../../features/issues/domain/models/customer_issue.dart';
 import '../../features/mentions/domain/models/mention.dart';
 import '../../features/mentions/domain/models/mention_engagement.dart';
 import '../../features/mentions/domain/models/mentions_filter.dart';
@@ -450,8 +452,31 @@ class MockApiService implements IApiService {
       totalMentions: 230,
       crisisActive: activeCrisis != null,
       crisisCount: activeCrisis != null ? 1 : 0,
+      crisisRiskLevel: activeCrisis != null ? 'High Risk' : 'Normal',
       pendingResponsesCount: 3,
       fraudAlertsCount: 1,
+      suspiciousReviewsCount: 5,
+      activeClustersCount: 1,
+      topIssues: const [
+        {
+          'id': 'iss_001',
+          'category': 'Customer Service',
+          'subtopic': 'Dinner Rush Wait Time & Queue Delays',
+          'severity': 'high',
+          'status': 'active',
+          'mention_count': 14,
+          'platforms_breakdown': {'Google': 6, 'Reddit': 4, 'X': 4},
+        },
+        {
+          'id': 'iss_002',
+          'category': 'Billing & Pricing',
+          'subtopic': 'Mandatory Service Surcharge & Transparency',
+          'severity': 'medium',
+          'status': 'active',
+          'mention_count': 10,
+          'platforms_breakdown': {'Google': 4, 'Reddit': 3, 'X': 3},
+        },
+      ],
       recentMentions: _mentions.take(4).toList(),
     );
   }
@@ -860,5 +885,178 @@ class MockApiService implements IApiService {
     }
 
     return dispatched;
+  }
+
+  // ── Full Platform Scan ──
+  @override
+  Future<Map<String, dynamic>> triggerScan() async {
+    await _delay();
+    return {
+      'business_id': _currentBusiness.id,
+      'status': 'completed',
+      'message': 'Scan completed across Google, Reddit, and X platforms',
+    };
+  }
+
+  @override
+  Future<Map<String, dynamic>> getScanStatus() async {
+    await _delay();
+    return {
+      'business_id': _currentBusiness.id,
+      'status': 'completed',
+      'active_platforms': ['Google', 'Reddit', 'X'],
+      'issues_count': 2,
+      'findings_count': 3,
+      'reputation_score': 78.4,
+    };
+  }
+
+  // ── Customer Issues & Complaints ──
+  @override
+  Future<List<CustomerIssue>> getIssues({
+    String? category,
+    String? severity,
+    String? status,
+  }) async {
+    await _delay();
+    var list = [
+      CustomerIssue(
+        id: 'iss_001',
+        businessId: _currentBusiness.id,
+        category: 'Customer Service',
+        subtopic: 'Dinner Rush Wait Time & Queue Delays',
+        severity: 'high',
+        status: 'active',
+        mentionCount: 14,
+        platformsBreakdown: const {'Google': 6, 'Reddit': 4, 'X': 4},
+        firstSeenAt: DateTime.now().subtract(const Duration(days: 5)),
+        lastSeenAt: DateTime.now().subtract(const Duration(hours: 2)),
+        evidence: [
+          IssueEvidence(
+            id: 'ism_001',
+            mentionId: 'goog_serv_01',
+            relevanceScore: 0.95,
+            excerpt: 'Slow service and we waited forever for our table.',
+            createdAt: DateTime.now().subtract(const Duration(days: 5)),
+          ),
+          IssueEvidence(
+            id: 'ism_002',
+            mentionId: 'red_serv_01',
+            relevanceScore: 0.90,
+            excerpt: 'Waited 50 minutes for a table even with prior booking. Manager was dismissive.',
+            createdAt: DateTime.now().subtract(const Duration(days: 4)),
+          ),
+        ],
+      ),
+      CustomerIssue(
+        id: 'iss_002',
+        businessId: _currentBusiness.id,
+        category: 'Billing & Pricing',
+        subtopic: 'Mandatory Service Surcharge & Transparency',
+        severity: 'medium',
+        status: 'active',
+        mentionCount: 10,
+        platformsBreakdown: const {'Google': 4, 'Reddit': 3, 'X': 3},
+        firstSeenAt: DateTime.now().subtract(const Duration(days: 8)),
+        lastSeenAt: DateTime.now().subtract(const Duration(hours: 4)),
+        evidence: [
+          IssueEvidence(
+            id: 'ism_003',
+            mentionId: 'goog_bill_01',
+            relevanceScore: 0.92,
+            excerpt: 'Unexpected surcharge and hidden fee added without consent.',
+            createdAt: DateTime.now().subtract(const Duration(days: 8)),
+          ),
+        ],
+      ),
+    ];
+
+    if (category != null) {
+      list = list.where((i) => i.category == category).toList();
+    }
+    if (severity != null) {
+      list = list.where((i) => i.severity == severity).toList();
+    }
+    if (status != null) {
+      list = list.where((i) => i.status == status).toList();
+    }
+    return list;
+  }
+
+  @override
+  Future<CustomerIssue> getIssueById(String id) async {
+    await _delay();
+    final issues = await getIssues();
+    return issues.firstWhere(
+      (i) => i.id == id,
+      orElse: () => issues.first,
+    );
+  }
+
+  // ── Findings & Review Authenticity ──
+  @override
+  Future<List<FindingItem>> getFindings({
+    String? type,
+    String? severity,
+  }) async {
+    await _delay();
+    var list = [
+      FindingItem(
+        id: 'fnd_001',
+        businessId: _currentBusiness.id,
+        findingType: 'review_authenticity',
+        severity: 'critical',
+        confidence: 0.92,
+        score: 0.90,
+        title: 'High Suspicion: Review on Google',
+        description: 'Review exhibits syntactic superlative density and identical template matching across 5 accounts.',
+        detectedAt: DateTime.now().subtract(const Duration(hours: 3)),
+        firstSeenAt: DateTime.now().subtract(const Duration(days: 2)),
+        lastSeenAt: DateTime.now().subtract(const Duration(days: 2)),
+        metadataJson: const {
+          'label': 'High Suspicion',
+          'signals': [
+            {'signal_name': 'Syntactic Superlative Density', 'score_contribution': 0.30},
+            {'signal_name': 'Duplicate Text Template', 'score_contribution': 0.40},
+            {'signal_name': 'Temporal Burst Velocity', 'score_contribution': 0.20},
+          ],
+        },
+      ),
+      FindingItem(
+        id: 'fnd_002',
+        businessId: _currentBusiness.id,
+        findingType: 'manipulation_cluster',
+        severity: 'critical',
+        confidence: 0.95,
+        score: 0.95,
+        title: 'Coordinated Review Manipulation Cluster (5 reviews)',
+        description: 'Detected coordinated burst of 5 reviews sharing nearly identical phrasing across Google within 16 minutes.',
+        detectedAt: DateTime.now().subtract(const Duration(hours: 2)),
+        firstSeenAt: DateTime.now().subtract(const Duration(days: 2)),
+        lastSeenAt: DateTime.now().subtract(const Duration(days: 2)),
+        metadataJson: const {
+          'cluster_size': 5,
+          'platforms': ['Google'],
+        },
+      ),
+    ];
+
+    if (type != null) {
+      list = list.where((f) => f.findingType == type).toList();
+    }
+    if (severity != null) {
+      list = list.where((f) => f.severity == severity).toList();
+    }
+    return list;
+  }
+
+  @override
+  Future<List<FindingItem>> getSuspiciousReviews() async {
+    return getFindings(type: 'review_authenticity');
+  }
+
+  @override
+  Future<List<FindingItem>> getManipulationClusters() async {
+    return getFindings(type: 'manipulation_cluster');
   }
 }

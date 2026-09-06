@@ -8,7 +8,9 @@ from app.api.v1.auth import router as auth_router
 from app.api.v1.businesses import router as businesses_router
 from app.api.v1.crisis import router as crisis_router
 from app.api.v1.dashboard import router as dashboard_router
+from app.api.v1.findings import router as findings_router
 from app.api.v1.fraud import router as fraud_router
+from app.api.v1.issues import router as issues_router
 from app.api.v1.keywords import router as keywords_router
 from app.api.v1.mentions import router as mentions_router
 from app.api.v1.reputation import router as reputation_router
@@ -27,6 +29,8 @@ api_v1_router.include_router(dashboard_router)
 api_v1_router.include_router(crisis_router)
 api_v1_router.include_router(alerts_router)
 api_v1_router.include_router(ai_response_router)
+api_v1_router.include_router(issues_router)
+api_v1_router.include_router(findings_router)
 
 
 @api_v1_router.post("/devices/register", tags=["Devices"])

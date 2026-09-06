@@ -1,6 +1,7 @@
 """Dashboard and Aggregated Analytics Pydantic schemas matching Flutter domain models."""
 
 from datetime import datetime
+from typing import Any
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -58,8 +59,12 @@ class DashboardSummarySchema(BaseModel):
     total_mentions: int = 0
     crisis_active: bool = False
     crisis_count: int = 0
+    crisis_risk_level: str = "Normal"
     pending_responses_count: int = 0
     fraud_alerts_count: int = 0
+    suspicious_reviews_count: int = 0
+    active_clusters_count: int = 0
+    top_issues: list[dict[str, Any]] = Field(default_factory=list)
     recent_mentions: list[MentionSchema] = Field(default_factory=list)
 
 

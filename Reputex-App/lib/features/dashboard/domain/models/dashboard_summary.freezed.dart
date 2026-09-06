@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$DashboardSummary {
 
-@JsonKey(name: 'reputation_score') ReputationScore get reputationScore;@JsonKey(name: 'sentiment_distribution') SentimentDistribution get sentimentDistribution;@JsonKey(name: 'total_mentions') int get totalMentions;@JsonKey(name: 'crisis_active') bool get crisisActive;@JsonKey(name: 'crisis_count') int get crisisCount;@JsonKey(name: 'pending_responses_count') int get pendingResponsesCount;@JsonKey(name: 'fraud_alerts_count') int get fraudAlertsCount;@JsonKey(name: 'recent_mentions') List<Mention> get recentMentions;
+@JsonKey(name: 'reputation_score') ReputationScore get reputationScore;@JsonKey(name: 'sentiment_distribution') SentimentDistribution get sentimentDistribution;@JsonKey(name: 'total_mentions') int get totalMentions;@JsonKey(name: 'crisis_active') bool get crisisActive;@JsonKey(name: 'crisis_count') int get crisisCount;@JsonKey(name: 'pending_responses_count') int get pendingResponsesCount;@JsonKey(name: 'fraud_alerts_count') int get fraudAlertsCount;@JsonKey(name: 'crisis_risk_level') String get crisisRiskLevel;@JsonKey(name: 'suspicious_reviews_count') int get suspiciousReviewsCount;@JsonKey(name: 'active_clusters_count') int get activeClustersCount;@JsonKey(name: 'top_issues') List<Map<String, dynamic>> get topIssues;@JsonKey(name: 'recent_mentions') List<Mention> get recentMentions;
 /// Create a copy of DashboardSummary
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $DashboardSummaryCopyWith<DashboardSummary> get copyWith => _$DashboardSummaryCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is DashboardSummary&&(identical(other.reputationScore, reputationScore) || other.reputationScore == reputationScore)&&(identical(other.sentimentDistribution, sentimentDistribution) || other.sentimentDistribution == sentimentDistribution)&&(identical(other.totalMentions, totalMentions) || other.totalMentions == totalMentions)&&(identical(other.crisisActive, crisisActive) || other.crisisActive == crisisActive)&&(identical(other.crisisCount, crisisCount) || other.crisisCount == crisisCount)&&(identical(other.pendingResponsesCount, pendingResponsesCount) || other.pendingResponsesCount == pendingResponsesCount)&&(identical(other.fraudAlertsCount, fraudAlertsCount) || other.fraudAlertsCount == fraudAlertsCount)&&const DeepCollectionEquality().equals(other.recentMentions, recentMentions));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is DashboardSummary&&(identical(other.reputationScore, reputationScore) || other.reputationScore == reputationScore)&&(identical(other.sentimentDistribution, sentimentDistribution) || other.sentimentDistribution == sentimentDistribution)&&(identical(other.totalMentions, totalMentions) || other.totalMentions == totalMentions)&&(identical(other.crisisActive, crisisActive) || other.crisisActive == crisisActive)&&(identical(other.crisisCount, crisisCount) || other.crisisCount == crisisCount)&&(identical(other.pendingResponsesCount, pendingResponsesCount) || other.pendingResponsesCount == pendingResponsesCount)&&(identical(other.fraudAlertsCount, fraudAlertsCount) || other.fraudAlertsCount == fraudAlertsCount)&&(identical(other.crisisRiskLevel, crisisRiskLevel) || other.crisisRiskLevel == crisisRiskLevel)&&(identical(other.suspiciousReviewsCount, suspiciousReviewsCount) || other.suspiciousReviewsCount == suspiciousReviewsCount)&&(identical(other.activeClustersCount, activeClustersCount) || other.activeClustersCount == activeClustersCount)&&const DeepCollectionEquality().equals(other.topIssues, topIssues)&&const DeepCollectionEquality().equals(other.recentMentions, recentMentions));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,reputationScore,sentimentDistribution,totalMentions,crisisActive,crisisCount,pendingResponsesCount,fraudAlertsCount,const DeepCollectionEquality().hash(recentMentions));
+int get hashCode => Object.hash(runtimeType,reputationScore,sentimentDistribution,totalMentions,crisisActive,crisisCount,pendingResponsesCount,fraudAlertsCount,crisisRiskLevel,suspiciousReviewsCount,activeClustersCount,const DeepCollectionEquality().hash(topIssues),const DeepCollectionEquality().hash(recentMentions));
 
 @override
 String toString() {
-  return 'DashboardSummary(reputationScore: $reputationScore, sentimentDistribution: $sentimentDistribution, totalMentions: $totalMentions, crisisActive: $crisisActive, crisisCount: $crisisCount, pendingResponsesCount: $pendingResponsesCount, fraudAlertsCount: $fraudAlertsCount, recentMentions: $recentMentions)';
+  return 'DashboardSummary(reputationScore: $reputationScore, sentimentDistribution: $sentimentDistribution, totalMentions: $totalMentions, crisisActive: $crisisActive, crisisCount: $crisisCount, pendingResponsesCount: $pendingResponsesCount, fraudAlertsCount: $fraudAlertsCount, crisisRiskLevel: $crisisRiskLevel, suspiciousReviewsCount: $suspiciousReviewsCount, activeClustersCount: $activeClustersCount, topIssues: $topIssues, recentMentions: $recentMentions)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $DashboardSummaryCopyWith<$Res>  {
   factory $DashboardSummaryCopyWith(DashboardSummary value, $Res Function(DashboardSummary) _then) = _$DashboardSummaryCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'reputation_score') ReputationScore reputationScore,@JsonKey(name: 'sentiment_distribution') SentimentDistribution sentimentDistribution,@JsonKey(name: 'total_mentions') int totalMentions,@JsonKey(name: 'crisis_active') bool crisisActive,@JsonKey(name: 'crisis_count') int crisisCount,@JsonKey(name: 'pending_responses_count') int pendingResponsesCount,@JsonKey(name: 'fraud_alerts_count') int fraudAlertsCount,@JsonKey(name: 'recent_mentions') List<Mention> recentMentions
+@JsonKey(name: 'reputation_score') ReputationScore reputationScore,@JsonKey(name: 'sentiment_distribution') SentimentDistribution sentimentDistribution,@JsonKey(name: 'total_mentions') int totalMentions,@JsonKey(name: 'crisis_active') bool crisisActive,@JsonKey(name: 'crisis_count') int crisisCount,@JsonKey(name: 'pending_responses_count') int pendingResponsesCount,@JsonKey(name: 'fraud_alerts_count') int fraudAlertsCount,@JsonKey(name: 'crisis_risk_level') String crisisRiskLevel,@JsonKey(name: 'suspicious_reviews_count') int suspiciousReviewsCount,@JsonKey(name: 'active_clusters_count') int activeClustersCount,@JsonKey(name: 'top_issues') List<Map<String, dynamic>> topIssues,@JsonKey(name: 'recent_mentions') List<Mention> recentMentions
 });
 
 
@@ -65,7 +65,7 @@ class _$DashboardSummaryCopyWithImpl<$Res>
 
 /// Create a copy of DashboardSummary
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? reputationScore = null,Object? sentimentDistribution = null,Object? totalMentions = null,Object? crisisActive = null,Object? crisisCount = null,Object? pendingResponsesCount = null,Object? fraudAlertsCount = null,Object? recentMentions = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? reputationScore = null,Object? sentimentDistribution = null,Object? totalMentions = null,Object? crisisActive = null,Object? crisisCount = null,Object? pendingResponsesCount = null,Object? fraudAlertsCount = null,Object? crisisRiskLevel = null,Object? suspiciousReviewsCount = null,Object? activeClustersCount = null,Object? topIssues = null,Object? recentMentions = null,}) {
   return _then(_self.copyWith(
 reputationScore: null == reputationScore ? _self.reputationScore : reputationScore // ignore: cast_nullable_to_non_nullable
 as ReputationScore,sentimentDistribution: null == sentimentDistribution ? _self.sentimentDistribution : sentimentDistribution // ignore: cast_nullable_to_non_nullable
@@ -74,7 +74,11 @@ as int,crisisActive: null == crisisActive ? _self.crisisActive : crisisActive //
 as bool,crisisCount: null == crisisCount ? _self.crisisCount : crisisCount // ignore: cast_nullable_to_non_nullable
 as int,pendingResponsesCount: null == pendingResponsesCount ? _self.pendingResponsesCount : pendingResponsesCount // ignore: cast_nullable_to_non_nullable
 as int,fraudAlertsCount: null == fraudAlertsCount ? _self.fraudAlertsCount : fraudAlertsCount // ignore: cast_nullable_to_non_nullable
-as int,recentMentions: null == recentMentions ? _self.recentMentions : recentMentions // ignore: cast_nullable_to_non_nullable
+as int,crisisRiskLevel: null == crisisRiskLevel ? _self.crisisRiskLevel : crisisRiskLevel // ignore: cast_nullable_to_non_nullable
+as String,suspiciousReviewsCount: null == suspiciousReviewsCount ? _self.suspiciousReviewsCount : suspiciousReviewsCount // ignore: cast_nullable_to_non_nullable
+as int,activeClustersCount: null == activeClustersCount ? _self.activeClustersCount : activeClustersCount // ignore: cast_nullable_to_non_nullable
+as int,topIssues: null == topIssues ? _self.topIssues : topIssues // ignore: cast_nullable_to_non_nullable
+as List<Map<String, dynamic>>,recentMentions: null == recentMentions ? _self.recentMentions : recentMentions // ignore: cast_nullable_to_non_nullable
 as List<Mention>,
   ));
 }
@@ -178,10 +182,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'reputation_score')  ReputationScore reputationScore, @JsonKey(name: 'sentiment_distribution')  SentimentDistribution sentimentDistribution, @JsonKey(name: 'total_mentions')  int totalMentions, @JsonKey(name: 'crisis_active')  bool crisisActive, @JsonKey(name: 'crisis_count')  int crisisCount, @JsonKey(name: 'pending_responses_count')  int pendingResponsesCount, @JsonKey(name: 'fraud_alerts_count')  int fraudAlertsCount, @JsonKey(name: 'recent_mentions')  List<Mention> recentMentions)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'reputation_score')  ReputationScore reputationScore, @JsonKey(name: 'sentiment_distribution')  SentimentDistribution sentimentDistribution, @JsonKey(name: 'total_mentions')  int totalMentions, @JsonKey(name: 'crisis_active')  bool crisisActive, @JsonKey(name: 'crisis_count')  int crisisCount, @JsonKey(name: 'pending_responses_count')  int pendingResponsesCount, @JsonKey(name: 'fraud_alerts_count')  int fraudAlertsCount, @JsonKey(name: 'crisis_risk_level')  String crisisRiskLevel, @JsonKey(name: 'suspicious_reviews_count')  int suspiciousReviewsCount, @JsonKey(name: 'active_clusters_count')  int activeClustersCount, @JsonKey(name: 'top_issues')  List<Map<String, dynamic>> topIssues, @JsonKey(name: 'recent_mentions')  List<Mention> recentMentions)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _DashboardSummary() when $default != null:
-return $default(_that.reputationScore,_that.sentimentDistribution,_that.totalMentions,_that.crisisActive,_that.crisisCount,_that.pendingResponsesCount,_that.fraudAlertsCount,_that.recentMentions);case _:
+return $default(_that.reputationScore,_that.sentimentDistribution,_that.totalMentions,_that.crisisActive,_that.crisisCount,_that.pendingResponsesCount,_that.fraudAlertsCount,_that.crisisRiskLevel,_that.suspiciousReviewsCount,_that.activeClustersCount,_that.topIssues,_that.recentMentions);case _:
   return orElse();
 
 }
@@ -199,10 +203,10 @@ return $default(_that.reputationScore,_that.sentimentDistribution,_that.totalMen
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'reputation_score')  ReputationScore reputationScore, @JsonKey(name: 'sentiment_distribution')  SentimentDistribution sentimentDistribution, @JsonKey(name: 'total_mentions')  int totalMentions, @JsonKey(name: 'crisis_active')  bool crisisActive, @JsonKey(name: 'crisis_count')  int crisisCount, @JsonKey(name: 'pending_responses_count')  int pendingResponsesCount, @JsonKey(name: 'fraud_alerts_count')  int fraudAlertsCount, @JsonKey(name: 'recent_mentions')  List<Mention> recentMentions)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'reputation_score')  ReputationScore reputationScore, @JsonKey(name: 'sentiment_distribution')  SentimentDistribution sentimentDistribution, @JsonKey(name: 'total_mentions')  int totalMentions, @JsonKey(name: 'crisis_active')  bool crisisActive, @JsonKey(name: 'crisis_count')  int crisisCount, @JsonKey(name: 'pending_responses_count')  int pendingResponsesCount, @JsonKey(name: 'fraud_alerts_count')  int fraudAlertsCount, @JsonKey(name: 'crisis_risk_level')  String crisisRiskLevel, @JsonKey(name: 'suspicious_reviews_count')  int suspiciousReviewsCount, @JsonKey(name: 'active_clusters_count')  int activeClustersCount, @JsonKey(name: 'top_issues')  List<Map<String, dynamic>> topIssues, @JsonKey(name: 'recent_mentions')  List<Mention> recentMentions)  $default,) {final _that = this;
 switch (_that) {
 case _DashboardSummary():
-return $default(_that.reputationScore,_that.sentimentDistribution,_that.totalMentions,_that.crisisActive,_that.crisisCount,_that.pendingResponsesCount,_that.fraudAlertsCount,_that.recentMentions);case _:
+return $default(_that.reputationScore,_that.sentimentDistribution,_that.totalMentions,_that.crisisActive,_that.crisisCount,_that.pendingResponsesCount,_that.fraudAlertsCount,_that.crisisRiskLevel,_that.suspiciousReviewsCount,_that.activeClustersCount,_that.topIssues,_that.recentMentions);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -219,10 +223,10 @@ return $default(_that.reputationScore,_that.sentimentDistribution,_that.totalMen
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'reputation_score')  ReputationScore reputationScore, @JsonKey(name: 'sentiment_distribution')  SentimentDistribution sentimentDistribution, @JsonKey(name: 'total_mentions')  int totalMentions, @JsonKey(name: 'crisis_active')  bool crisisActive, @JsonKey(name: 'crisis_count')  int crisisCount, @JsonKey(name: 'pending_responses_count')  int pendingResponsesCount, @JsonKey(name: 'fraud_alerts_count')  int fraudAlertsCount, @JsonKey(name: 'recent_mentions')  List<Mention> recentMentions)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'reputation_score')  ReputationScore reputationScore, @JsonKey(name: 'sentiment_distribution')  SentimentDistribution sentimentDistribution, @JsonKey(name: 'total_mentions')  int totalMentions, @JsonKey(name: 'crisis_active')  bool crisisActive, @JsonKey(name: 'crisis_count')  int crisisCount, @JsonKey(name: 'pending_responses_count')  int pendingResponsesCount, @JsonKey(name: 'fraud_alerts_count')  int fraudAlertsCount, @JsonKey(name: 'crisis_risk_level')  String crisisRiskLevel, @JsonKey(name: 'suspicious_reviews_count')  int suspiciousReviewsCount, @JsonKey(name: 'active_clusters_count')  int activeClustersCount, @JsonKey(name: 'top_issues')  List<Map<String, dynamic>> topIssues, @JsonKey(name: 'recent_mentions')  List<Mention> recentMentions)?  $default,) {final _that = this;
 switch (_that) {
 case _DashboardSummary() when $default != null:
-return $default(_that.reputationScore,_that.sentimentDistribution,_that.totalMentions,_that.crisisActive,_that.crisisCount,_that.pendingResponsesCount,_that.fraudAlertsCount,_that.recentMentions);case _:
+return $default(_that.reputationScore,_that.sentimentDistribution,_that.totalMentions,_that.crisisActive,_that.crisisCount,_that.pendingResponsesCount,_that.fraudAlertsCount,_that.crisisRiskLevel,_that.suspiciousReviewsCount,_that.activeClustersCount,_that.topIssues,_that.recentMentions);case _:
   return null;
 
 }
@@ -234,7 +238,7 @@ return $default(_that.reputationScore,_that.sentimentDistribution,_that.totalMen
 @JsonSerializable()
 
 class _DashboardSummary implements DashboardSummary {
-  const _DashboardSummary({@JsonKey(name: 'reputation_score') required this.reputationScore, @JsonKey(name: 'sentiment_distribution') required this.sentimentDistribution, @JsonKey(name: 'total_mentions') this.totalMentions = 0, @JsonKey(name: 'crisis_active') this.crisisActive = false, @JsonKey(name: 'crisis_count') this.crisisCount = 0, @JsonKey(name: 'pending_responses_count') this.pendingResponsesCount = 0, @JsonKey(name: 'fraud_alerts_count') this.fraudAlertsCount = 0, @JsonKey(name: 'recent_mentions') this.recentMentions = const []});
+  const _DashboardSummary({@JsonKey(name: 'reputation_score') required this.reputationScore, @JsonKey(name: 'sentiment_distribution') required this.sentimentDistribution, @JsonKey(name: 'total_mentions') this.totalMentions = 0, @JsonKey(name: 'crisis_active') this.crisisActive = false, @JsonKey(name: 'crisis_count') this.crisisCount = 0, @JsonKey(name: 'pending_responses_count') this.pendingResponsesCount = 0, @JsonKey(name: 'fraud_alerts_count') this.fraudAlertsCount = 0, @JsonKey(name: 'crisis_risk_level') this.crisisRiskLevel = 'Normal', @JsonKey(name: 'suspicious_reviews_count') this.suspiciousReviewsCount = 0, @JsonKey(name: 'active_clusters_count') this.activeClustersCount = 0, @JsonKey(name: 'top_issues') this.topIssues = const [], @JsonKey(name: 'recent_mentions') this.recentMentions = const []});
   factory _DashboardSummary.fromJson(Map<String, dynamic> json) => _$DashboardSummaryFromJson(json);
 
 @override@JsonKey(name: 'reputation_score') final  ReputationScore reputationScore;
@@ -244,6 +248,10 @@ class _DashboardSummary implements DashboardSummary {
 @override@JsonKey(name: 'crisis_count') final  int crisisCount;
 @override@JsonKey(name: 'pending_responses_count') final  int pendingResponsesCount;
 @override@JsonKey(name: 'fraud_alerts_count') final  int fraudAlertsCount;
+@override@JsonKey(name: 'crisis_risk_level') final  String crisisRiskLevel;
+@override@JsonKey(name: 'suspicious_reviews_count') final  int suspiciousReviewsCount;
+@override@JsonKey(name: 'active_clusters_count') final  int activeClustersCount;
+@override@JsonKey(name: 'top_issues') final  List<Map<String, dynamic>> topIssues;
 @override@JsonKey(name: 'recent_mentions') final  List<Mention> recentMentions;
 
 /// Create a copy of DashboardSummary
@@ -259,16 +267,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DashboardSummary&&(identical(other.reputationScore, reputationScore) || other.reputationScore == reputationScore)&&(identical(other.sentimentDistribution, sentimentDistribution) || other.sentimentDistribution == sentimentDistribution)&&(identical(other.totalMentions, totalMentions) || other.totalMentions == totalMentions)&&(identical(other.crisisActive, crisisActive) || other.crisisActive == crisisActive)&&(identical(other.crisisCount, crisisCount) || other.crisisCount == crisisCount)&&(identical(other.pendingResponsesCount, pendingResponsesCount) || other.pendingResponsesCount == pendingResponsesCount)&&(identical(other.fraudAlertsCount, fraudAlertsCount) || other.fraudAlertsCount == fraudAlertsCount)&&const DeepCollectionEquality().equals(other.recentMentions, recentMentions));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DashboardSummary&&(identical(other.reputationScore, reputationScore) || other.reputationScore == reputationScore)&&(identical(other.sentimentDistribution, sentimentDistribution) || other.sentimentDistribution == sentimentDistribution)&&(identical(other.totalMentions, totalMentions) || other.totalMentions == totalMentions)&&(identical(other.crisisActive, crisisActive) || other.crisisActive == crisisActive)&&(identical(other.crisisCount, crisisCount) || other.crisisCount == crisisCount)&&(identical(other.pendingResponsesCount, pendingResponsesCount) || other.pendingResponsesCount == pendingResponsesCount)&&(identical(other.fraudAlertsCount, fraudAlertsCount) || other.fraudAlertsCount == fraudAlertsCount)&&(identical(other.crisisRiskLevel, crisisRiskLevel) || other.crisisRiskLevel == crisisRiskLevel)&&(identical(other.suspiciousReviewsCount, suspiciousReviewsCount) || other.suspiciousReviewsCount == suspiciousReviewsCount)&&(identical(other.activeClustersCount, activeClustersCount) || other.activeClustersCount == activeClustersCount)&&const DeepCollectionEquality().equals(other.topIssues, topIssues)&&const DeepCollectionEquality().equals(other.recentMentions, recentMentions));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,reputationScore,sentimentDistribution,totalMentions,crisisActive,crisisCount,pendingResponsesCount,fraudAlertsCount,const DeepCollectionEquality().hash(recentMentions));
+int get hashCode => Object.hash(runtimeType,reputationScore,sentimentDistribution,totalMentions,crisisActive,crisisCount,pendingResponsesCount,fraudAlertsCount,crisisRiskLevel,suspiciousReviewsCount,activeClustersCount,const DeepCollectionEquality().hash(topIssues),const DeepCollectionEquality().hash(recentMentions));
 
 @override
 String toString() {
-  return 'DashboardSummary(reputationScore: $reputationScore, sentimentDistribution: $sentimentDistribution, totalMentions: $totalMentions, crisisActive: $crisisActive, crisisCount: $crisisCount, pendingResponsesCount: $pendingResponsesCount, fraudAlertsCount: $fraudAlertsCount, recentMentions: $recentMentions)';
+  return 'DashboardSummary(reputationScore: $reputationScore, sentimentDistribution: $sentimentDistribution, totalMentions: $totalMentions, crisisActive: $crisisActive, crisisCount: $crisisCount, pendingResponsesCount: $pendingResponsesCount, fraudAlertsCount: $fraudAlertsCount, crisisRiskLevel: $crisisRiskLevel, suspiciousReviewsCount: $suspiciousReviewsCount, activeClustersCount: $activeClustersCount, topIssues: $topIssues, recentMentions: $recentMentions)';
 }
 
 
@@ -279,7 +287,7 @@ abstract mixin class _$DashboardSummaryCopyWith<$Res> implements $DashboardSumma
   factory _$DashboardSummaryCopyWith(_DashboardSummary value, $Res Function(_DashboardSummary) _then) = __$DashboardSummaryCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'reputation_score') ReputationScore reputationScore,@JsonKey(name: 'sentiment_distribution') SentimentDistribution sentimentDistribution,@JsonKey(name: 'total_mentions') int totalMentions,@JsonKey(name: 'crisis_active') bool crisisActive,@JsonKey(name: 'crisis_count') int crisisCount,@JsonKey(name: 'pending_responses_count') int pendingResponsesCount,@JsonKey(name: 'fraud_alerts_count') int fraudAlertsCount,@JsonKey(name: 'recent_mentions') List<Mention> recentMentions
+@JsonKey(name: 'reputation_score') ReputationScore reputationScore,@JsonKey(name: 'sentiment_distribution') SentimentDistribution sentimentDistribution,@JsonKey(name: 'total_mentions') int totalMentions,@JsonKey(name: 'crisis_active') bool crisisActive,@JsonKey(name: 'crisis_count') int crisisCount,@JsonKey(name: 'pending_responses_count') int pendingResponsesCount,@JsonKey(name: 'fraud_alerts_count') int fraudAlertsCount,@JsonKey(name: 'crisis_risk_level') String crisisRiskLevel,@JsonKey(name: 'suspicious_reviews_count') int suspiciousReviewsCount,@JsonKey(name: 'active_clusters_count') int activeClustersCount,@JsonKey(name: 'top_issues') List<Map<String, dynamic>> topIssues,@JsonKey(name: 'recent_mentions') List<Mention> recentMentions
 });
 
 
@@ -296,7 +304,7 @@ class __$DashboardSummaryCopyWithImpl<$Res>
 
 /// Create a copy of DashboardSummary
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? reputationScore = null,Object? sentimentDistribution = null,Object? totalMentions = null,Object? crisisActive = null,Object? crisisCount = null,Object? pendingResponsesCount = null,Object? fraudAlertsCount = null,Object? recentMentions = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? reputationScore = null,Object? sentimentDistribution = null,Object? totalMentions = null,Object? crisisActive = null,Object? crisisCount = null,Object? pendingResponsesCount = null,Object? fraudAlertsCount = null,Object? crisisRiskLevel = null,Object? suspiciousReviewsCount = null,Object? activeClustersCount = null,Object? topIssues = null,Object? recentMentions = null,}) {
   return _then(_DashboardSummary(
 reputationScore: null == reputationScore ? _self.reputationScore : reputationScore // ignore: cast_nullable_to_non_nullable
 as ReputationScore,sentimentDistribution: null == sentimentDistribution ? _self.sentimentDistribution : sentimentDistribution // ignore: cast_nullable_to_non_nullable
@@ -305,7 +313,11 @@ as int,crisisActive: null == crisisActive ? _self.crisisActive : crisisActive //
 as bool,crisisCount: null == crisisCount ? _self.crisisCount : crisisCount // ignore: cast_nullable_to_non_nullable
 as int,pendingResponsesCount: null == pendingResponsesCount ? _self.pendingResponsesCount : pendingResponsesCount // ignore: cast_nullable_to_non_nullable
 as int,fraudAlertsCount: null == fraudAlertsCount ? _self.fraudAlertsCount : fraudAlertsCount // ignore: cast_nullable_to_non_nullable
-as int,recentMentions: null == recentMentions ? _self.recentMentions : recentMentions // ignore: cast_nullable_to_non_nullable
+as int,crisisRiskLevel: null == crisisRiskLevel ? _self.crisisRiskLevel : crisisRiskLevel // ignore: cast_nullable_to_non_nullable
+as String,suspiciousReviewsCount: null == suspiciousReviewsCount ? _self.suspiciousReviewsCount : suspiciousReviewsCount // ignore: cast_nullable_to_non_nullable
+as int,activeClustersCount: null == activeClustersCount ? _self.activeClustersCount : activeClustersCount // ignore: cast_nullable_to_non_nullable
+as int,topIssues: null == topIssues ? _self.topIssues : topIssues // ignore: cast_nullable_to_non_nullable
+as List<Map<String, dynamic>>,recentMentions: null == recentMentions ? _self.recentMentions : recentMentions // ignore: cast_nullable_to_non_nullable
 as List<Mention>,
   ));
 }

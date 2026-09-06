@@ -78,6 +78,35 @@ class ReputationService:
 
         response_comp = 88.0
 
+        # Customer Issues Penalty (Active / Emerging issues)
+        from app.models.crisis import CrisisEvent
+        from app.models.issue import Issue
+
+        stmt_issues = select(Issue).where(
+            Issue.business_id == business_id,
+            Issue.status.in_(["active", "emerging"]),
+        )
+        active_issues = list((await self.db.execute(stmt_issues)).scalars().all())
+        issue_penalty = 0.0
+        for iss in active_issues:
+            if iss.severity == "critical":
+                issue_penalty += 4.0
+            elif iss.severity == "high":
+                issue_penalty += 2.0
+            elif iss.severity == "medium":
+                issue_penalty += 1.0
+        issue_penalty = min(20.0, issue_penalty)
+
+        # Crisis Risk Penalty
+        stmt_crisis = select(CrisisEvent).where(
+            CrisisEvent.business_id == business_id,
+            CrisisEvent.status == "active",
+        )
+        active_crisis = (await self.db.execute(stmt_crisis)).scalars().first()
+        crisis_penalty = 0.0
+        if active_crisis:
+            crisis_penalty = 15.0 if active_crisis.severity == "critical" else 10.0
+
         # Weighted calculation
         raw_score = (
             (0.35 * rating_comp)
@@ -85,6 +114,8 @@ class ReputationService:
             + (0.15 * volume_comp)
             + (0.20 * response_comp)
             - fraud_penalty
+            - issue_penalty
+            - crisis_penalty
         )
         final_score = round(min(100.0, max(10.0, raw_score)), 1)
 
@@ -96,6 +127,8 @@ class ReputationService:
                 "volume_component": round(volume_comp, 1),
                 "response_component": round(response_comp, 1),
                 "fraud_penalty": round(fraud_penalty, 1),
+                "issue_penalty": round(issue_penalty, 1),
+                "crisis_penalty": round(crisis_penalty, 1),
                 "total_reviews": total_reviews,
                 "fake_count": fake_count,
             },

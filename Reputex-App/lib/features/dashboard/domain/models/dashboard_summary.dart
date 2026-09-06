@@ -20,6 +20,18 @@ abstract class DashboardSummary with _$DashboardSummary {
     @Default(0)
     int pendingResponsesCount,
     @JsonKey(name: 'fraud_alerts_count') @Default(0) int fraudAlertsCount,
+    @JsonKey(name: 'crisis_risk_level')
+    @Default('Normal')
+    String crisisRiskLevel,
+    @JsonKey(name: 'suspicious_reviews_count')
+    @Default(0)
+    int suspiciousReviewsCount,
+    @JsonKey(name: 'active_clusters_count')
+    @Default(0)
+    int activeClustersCount,
+    @JsonKey(name: 'top_issues')
+    @Default([])
+    List<Map<String, dynamic>> topIssues,
     @JsonKey(name: 'recent_mentions') @Default([]) List<Mention> recentMentions,
   }) = _DashboardSummary;
 

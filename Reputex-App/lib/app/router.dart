@@ -14,6 +14,7 @@ import '../features/sentiment/presentation/screens/sentiment_analytics_screen.da
 import '../features/fraud/presentation/screens/fraud_screen.dart';
 import '../features/crisis/presentation/screens/crisis_screen.dart';
 import '../features/crisis/presentation/screens/crisis_detail_screen.dart';
+import '../features/issues/presentation/screens/issue_detail_screen.dart';
 import '../features/responses/presentation/screens/ai_response_screen.dart';
 import '../core/widgets/bottom_nav_scaffold.dart';
 
@@ -97,6 +98,12 @@ final GoRouter appRouter = GoRouter(
       parentNavigatorKey: _rootNavigatorKey,
       builder: (context, state) =>
           CrisisDetailScreen(crisisId: state.pathParameters['id']!),
+    ),
+    GoRoute(
+      path: '/issues/:id',
+      parentNavigatorKey: _rootNavigatorKey,
+      builder: (context, state) =>
+          IssueDetailScreen(issueId: state.pathParameters['id']!),
     ),
   ],
 );

@@ -75,6 +75,7 @@ def mock_celery_broker(monkeypatch):
         "calculate_reputation",
         "detect_crisis",
         "generate_alerts",
+        "scan_business_full",
     ]:
         task_obj = getattr(tasks, task_name, None)
         if task_obj and hasattr(task_obj, "delay"):

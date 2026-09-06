@@ -51,5 +51,12 @@ class Settings(BaseSettings):
     REDDIT_USER_AGENT: str = "reputex-app:v1.0"
     TWITTER_BEARER_TOKEN: str = ""
 
+    # Firecrawl Acquisition Settings (Primary for Reddit & X)
+    FIRECRAWL_API_KEY: str = ""
+    FIRECRAWL_ENABLED: bool = False
+    FIRECRAWL_BASE_URL: str = "https://api.firecrawl.dev"
+    FIRECRAWL_MAX_RESULTS_PER_QUERY: int = 5
+    FIRECRAWL_MAX_PAGES_PER_INGESTION: int = 3
+
 
 settings = Settings()

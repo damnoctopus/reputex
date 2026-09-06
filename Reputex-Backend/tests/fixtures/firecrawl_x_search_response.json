@@ -1,0 +1,33 @@
+{
+  "success": true,
+  "data": [
+    {
+      "url": "https://x.com/techie_in_blr/status/1789012345678901234",
+      "title": "Aditya on X: 'Tried dinner at Spice Symphony Bangalore. Outstanding flavors and great ambiance, definitely recommended!'",
+      "description": "Tried dinner at Spice Symphony Bangalore. Outstanding flavors and great ambiance, definitely recommended!",
+      "markdown": "Tried dinner at Spice Symphony Bangalore. Outstanding flavors and great ambiance, definitely recommended!\n\n28 likes · 4 reposts · 7 replies",
+      "metadata": {
+        "ogTitle": "Aditya on X: 'Tried dinner at Spice Symphony...'",
+        "description": "Tried dinner at Spice Symphony Bangalore. Outstanding flavors...",
+        "sourceURL": "https://x.com/techie_in_blr/status/1789012345678901234",
+        "statusCode": 200,
+        "author": "techie_in_blr",
+        "article:published_time": "2026-08-18T19:30:00Z"
+      }
+    },
+    {
+      "url": "https://twitter.com/blr_eats/status/1789012345678901235",
+      "title": "Bangalore Eats on Twitter: 'Major customer service breakdown at Spice Symphony today. Waited over an hour for our order.'",
+      "description": "Major customer service breakdown at Spice Symphony today. Waited over an hour for our order.",
+      "markdown": "Major customer service breakdown at Spice Symphony today. Waited over an hour for our order and staff was dismissive. Not acceptable.\n\n45 likes · 12 retweets · 19 replies",
+      "metadata": {
+        "ogTitle": "Bangalore Eats on Twitter: 'Major customer service breakdown...'",
+        "description": "Major customer service breakdown at Spice Symphony today...",
+        "sourceURL": "https://twitter.com/blr_eats/status/1789012345678901235",
+        "statusCode": 200,
+        "author": "blr_eats",
+        "article:published_time": "2026-08-20T21:10:00Z"
+      }
+    }
+  ]
+}

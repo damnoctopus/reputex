@@ -433,7 +433,10 @@ backend/
 │   │   ├── fraud.py
 │   │   ├── crisis.py
 │   │   ├── alert.py
-│   │   └── ai_response.py
+│   │   ├── ai_response.py
+│   │   ├── issue.py                # Customer Issues & Complaint Schemas
+│   │   ├── finding.py              # Review Authenticity & Finding Schemas
+│   │   └── scan.py                 # Async Scan Request & Status Schemas
 │   │
 │   ├── repositories/               # Async Data Access Layer (CRUD & Queries)
 │   │   ├── __init__.py
@@ -444,7 +447,9 @@ backend/
 │   │   ├── fraud_repository.py
 │   │   ├── crisis_repository.py
 │   │   ├── alert_repository.py
-│   │   └── ai_response_repository.py
+│   │   ├── ai_response_repository.py
+│   │   ├── issue_repository.py     # Customer Issue & Evidence Repositories
+│   │   └── finding_repository.py   # Finding & Evidence Repositories
 │   │
 │   ├── services/                   # Core Business Logic Layer
 │   │   ├── __init__.py
@@ -457,15 +462,24 @@ backend/
 │   │   ├── reputation_service.py
 │   │   ├── crisis_service.py
 │   │   ├── alert_service.py
-│   │   └── ai_service.py
+│   │   ├── ai_service.py
+│   │   ├── issue_detection_service.py # Explainable Issue Discovery & Semantic Clustering
+│   │   └── authenticity_service.py    # Multi-Signal Review Authenticity & Clusters
 │   │
-│   ├── integrations/               # External Platform Connectors
+│   ├── integrations/               # External Platform Connectors & Web Scrapers
 │   │   ├── __init__.py
 │   │   ├── base.py                 # PlatformConnector abstract interface
-│   │   ├── mock_connector.py       # Deterministic realistic mock platform connector
-│   │   ├── google.py               # Google Places / Business Profile skeleton
-│   │   ├── reddit.py               # Reddit API skeleton
-│   │   ├── twitter.py              # X API skeleton
+│   │   ├── firecrawl_client.py     # Resilient Firecrawl HTTP Scraper Client
+│   │   ├── reddit_provider.py      # Reddit Provider Protocol
+│   │   ├── reddit_firecrawl_provider.py # Primary Reddit Scraping Provider
+│   │   ├── reddit_api_provider.py  # Optional Official Reddit OAuth Provider
+│   │   ├── x_provider.py           # X/Twitter Provider Protocol
+│   │   ├── x_firecrawl_provider.py # Primary X Scraping Provider
+│   │   ├── x_api_provider.py       # Optional Official X v2 API Provider
+│   │   ├── google.py               # Google Places API New Reviews Connector
+│   │   ├── reddit.py               # Reddit Connector delegating to Firecrawl/API/Mock
+│   │   ├── twitter.py              # X Connector delegating to Firecrawl/API/Mock
+│   │   ├── mock_connector.py       # Deterministic 75-mention multi-platform dataset
 │   │   └── justdial.py             # JustDial crawler skeleton
 │   │
 │   ├── ai/                         # AI Provider Abstraction
@@ -477,14 +491,14 @@ backend/
 │   └── workers/                    # Celery Background Tasks
 │       ├── __init__.py
 │       ├── celery_app.py
-│       └── tasks.py
+│       └── tasks.py                # scan_business_full & ingestion tasks
 │
 ├── migrations/                     # Alembic migration scripts
 │   ├── env.py
 │   └── versions/
+│       └── 2026_09_06_2315-b4c3d2e1f0a9_phase_3_issues_and_findings.py
 │
-├── tests/                          # Automated Pytest Suite
-│   ├── __init__.py
+├── tests/                          # Automated Pytest Suite (79/79 passing)
 │   ├── conftest.py
 │   ├── test_auth.py
 │   ├── test_businesses.py
@@ -494,7 +508,13 @@ backend/
 │   ├── test_crisis.py
 │   ├── test_alerts.py
 │   ├── test_ai_responses.py
-│   └── test_tenant_isolation.py
+│   ├── test_tenant_isolation.py
+│   ├── test_firecrawl_client.py
+│   ├── test_reddit_acquisition.py
+│   ├── test_x_acquisition.py
+│   ├── test_intelligence_services.py
+│   ├── test_scan_and_issues_api.py
+│   └── test_flutter_integration.py
 │
 ├── scripts/
 │   └── seed.py                     # High-fidelity deterministic database seeding
@@ -508,3 +528,33 @@ backend/
 ├── ARCHITECTURE.md
 └── API_CONTRACT.md
 ```
+
+---
+
+## 10. Multi-Platform Web Acquisition & Intelligence Engines
+
+### 10.1 Firecrawl-First Architecture
+Firecrawl serves as the primary acquisition mechanism for Reddit and X/Twitter public discussions:
+- **Resilient Client**: `FirecrawlClient` implements exponential backoff on HTTP 429, structured error taxonomy (`FirecrawlAuthError`, `FirecrawlRateLimitError`, `FirecrawlServerError`), and bounded retry loop.
+- **Provider Protocol Pattern**: `RedditProvider` and `XProvider` protocols decouple acquisition logic. `RedditFirecrawlProvider` and `XFirecrawlProvider` parse raw search/markdown responses into domain-compliant `RawMentionRecord`s with true source publication timestamps.
+- **Graceful Mock Fallback**: When `FIRECRAWL_API_KEY` is not configured or in offline test mode, connectors transparently fall back to `MockPlatformConnector` without failing the pipeline.
+
+### 10.2 Explainable Customer Issue Discovery
+- `IssueDetectionService` analyzes customer feedback across all platforms.
+- Categorizes complaints into structured domain categories: `Customer Service`, `Food Quality`, `Hygiene & Cleanliness`, `Billing & Pricing`, `Operations & Facilities`.
+- Calculates severity weights, tracks cross-platform detection breakdowns (`Google: X, Reddit: Y, X: Z`), and links supporting evidence mentions via `issue_mentions`.
+
+### 10.3 Transparent Review Authenticity & Cluster Detection
+- `ReviewAuthenticityService` analyzes reviews using multi-signal evaluation:
+  1. *Syntactic Superlative Density*: Excessive hyperbolic adverbs without specific operational details.
+  2. *Duplicate Text Template*: Near-duplicate body matching across distinct accounts.
+  3. *Temporal Burst Velocity*: Anomalous volume spikes within narrow time windows.
+  4. *Polarized Rating Inversion*: Contradictions between narrative sentiment and 5-star rating.
+- Terminology strictly adheres to legal and trust best practices: labels use non-defamatory phrasing (`High Suspicion`, `Likely Suspicious`, `Review Manipulation Risk`).
+- Groups coordinated bursts into `manipulation_cluster` findings.
+
+### 10.4 Crisis Early Warning & Dynamic Scoring
+- `CrisisService` tracks negative velocity across rolling time windows (24h vs baseline).
+- Emits transparent warning levels: `Normal`, `Elevated Risk`, `High Risk`, `Crisis Active`.
+- Computes driver attribution explaining which subtopics and keywords triggered the risk spike.
+- Multi-factor reputation formula adjusts score dynamically: deductions for active issues, manipulation clusters, and crisis spikes.

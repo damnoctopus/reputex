@@ -911,3 +911,147 @@ All errors returned by the API adhere to the following schema, ensuring full com
   "message": "Device token registered"
 }
 ```
+
+---
+
+### 4.10 Full Platform Business Scan Workflow
+
+#### 4.10.1 Trigger Async Scan
+- **Endpoint**: `POST /api/v1/businesses/{id}/scan` (aliases: `POST /api/businesses/{id}/scan`, `POST /api/v1/business/scan`, `POST /api/business/scan`)
+- **Authentication**: Required (`Bearer <token>`)
+- **Request Body**: None (optional `platforms` list)
+- **Response JSON (202 Accepted)**:
+```json
+{
+  "task_id": "scan_8c9d12e...",
+  "business_id": "biz_01J6X7B9C2...",
+  "status": "queued",
+  "message": "Full reputation scan initiated across Google, Reddit, and X"
+}
+```
+
+#### 4.10.2 Poll Scan Status
+- **Endpoint**: `GET /api/v1/businesses/{id}/scan/status?task_id={task_id}` (aliases: `GET /api/businesses/{id}/scan/status`, `GET /api/v1/business/scan/status`)
+- **Authentication**: Required (`Bearer <token>`)
+- **Response JSON (200 OK)**:
+```json
+{
+  "task_id": "scan_8c9d12e...",
+  "business_id": "biz_01J6X7B9C2...",
+  "status": "completed",
+  "result": {
+    "scanned_platforms": ["google", "reddit", "x"],
+    "new_mentions": 75,
+    "issues_detected": 4,
+    "manipulation_clusters": 1,
+    "crisis_risk_level": "Elevated Risk",
+    "reputation_score": 78.4
+  }
+}
+```
+
+---
+
+### 4.11 Customer Issues & Complaints
+
+#### 4.11.1 List Customer Issues
+- **Endpoint**: `GET /api/v1/businesses/{id}/issues` (alias: `GET /api/issues`)
+- **Authentication**: Required (`Bearer <token>`)
+- **Query Parameters**: `category` (optional), `severity` (optional), `status` (optional)
+- **Response JSON (200 OK)**:
+```json
+[
+  {
+    "id": "iss_01J6X...",
+    "business_id": "biz_01J6X...",
+    "category": "Customer Service",
+    "subtopic": "Dinner Rush Wait Times & Host Desk Queue",
+    "severity": "high",
+    "status": "active",
+    "mention_count": 14,
+    "platforms_breakdown": {
+      "Google": 6,
+      "Reddit": 4,
+      "X": 4
+    },
+    "first_seen_at": "2026-09-01T18:00:00Z",
+    "last_seen_at": "2026-09-06T21:30:00Z",
+    "evidence": [
+      {
+        "id": "ism_01J6X...",
+        "mention_id": "men_goog_01",
+        "relevance_score": 0.95,
+        "excerpt": "Slow service and we waited forever for our table.",
+        "created_at": "2026-09-02T19:00:00Z"
+      }
+    ]
+  }
+]
+```
+- **Flutter Model Consumed**: `CustomerIssue`
+
+#### 4.11.2 Get Customer Issue Details
+- **Endpoint**: `GET /api/v1/businesses/{id}/issues/{issue_id}` (alias: `GET /api/issues/{issue_id}`)
+- **Authentication**: Required (`Bearer <token>`)
+- **Response JSON (200 OK)**: Single `CustomerIssue` object matching the schema above.
+
+---
+
+### 4.12 Review Authenticity & Coordinated Manipulation Findings
+
+#### 4.12.1 List Findings
+- **Endpoint**: `GET /api/v1/businesses/{id}/findings` (alias: `GET /api/findings`)
+- **Authentication**: Required (`Bearer <token>`)
+- **Query Parameters**: `type` (`review_authenticity` | `manipulation_cluster` | `crisis_warning`), `severity`
+- **Response JSON (200 OK)**:
+```json
+[
+  {
+    "id": "fnd_01J6X...",
+    "business_id": "biz_01J6X...",
+    "finding_type": "manipulation_cluster",
+    "severity": "critical",
+    "confidence": 0.95,
+    "score": 0.95,
+    "title": "Coordinated Review Manipulation Cluster (5 reviews)",
+    "description": "Detected coordinated burst of 5 reviews sharing identical superlative phrasing across Google within 16 minutes.",
+    "detected_at": "2026-09-06T20:00:00Z",
+    "first_seen_at": "2026-09-04T12:00:00Z",
+    "last_seen_at": "2026-09-04T12:16:00Z",
+    "metadata_json": {
+      "cluster_size": 5,
+      "platforms": ["Google"],
+      "time_window_minutes": 16.0
+    },
+    "evidence": [
+      {
+        "id": "fev_01J6X...",
+        "finding_id": "fnd_01J6X...",
+        "mention_id": "goog_clust_01",
+        "evidence_type": "review",
+        "snippet": "Absolutely the most incredible exquisite food on planet earth!",
+        "relevance_score": 1.0,
+        "created_at": "2026-09-04T12:00:00Z"
+      }
+    ]
+  }
+]
+```
+- **Flutter Model Consumed**: `FindingItem`
+
+#### 4.12.2 Get Suspicious Reviews
+- **Endpoint**: `GET /api/v1/businesses/{id}/suspicious-reviews` (alias: `GET /api/suspicious-reviews`)
+- **Authentication**: Required (`Bearer <token>`)
+- **Response JSON (200 OK)**: List of `FindingItem` objects with `finding_type == "review_authenticity"`. Metadata includes transparent signal contributions:
+```json
+{
+  "label": "High Suspicion",
+  "signal_scores": {
+    "superlative_density": 0.85,
+    "duplicate_template": 0.90,
+    "temporal_velocity": 0.80,
+    "polarized_inversion": 0.0
+  }
+}
+```
+

@@ -84,10 +84,42 @@ class DashboardService:
         # 5. Fraud alerts count
         fraud_alerts_count = sum(1 for m in mentions if m.is_fake or (m.fraud_confidence or 0.0) >= 0.6)
 
-        # 6. Pending responses (unresponded negative mentions)
+        # 6. Customer Issues & Findings
+        from app.repositories.finding_repository import FindingRepository
+        from app.repositories.issue_repository import IssueRepository
+
+        issue_repo = IssueRepository(self.db)
+        top_issues_raw = await issue_repo.list_by_business(business_id, limit=5)
+        top_issues = [
+            {
+                "id": iss.id,
+                "category": iss.category,
+                "subtopic": iss.subtopic,
+                "severity": iss.severity,
+                "status": iss.status,
+                "mention_count": iss.mention_count,
+                "platforms_breakdown": iss.platforms_breakdown,
+                "last_seen_at": iss.last_seen_at.isoformat() if iss.last_seen_at else None,
+            }
+            for iss in top_issues_raw
+        ]
+
+        finding_repo = FindingRepository(self.db)
+        all_findings = await finding_repo.list_by_business(business_id, limit=100)
+        suspicious_reviews_count = sum(1 for f in all_findings if f.finding_type == "review_authenticity")
+        active_clusters_count = sum(1 for f in all_findings if f.finding_type == "manipulation_cluster")
+
+        crisis_risk_level = "Normal"
+        crisis_finding = next((f for f in all_findings if f.finding_type == "crisis_risk"), None)
+        if crisis_finding and crisis_finding.metadata_json.get("warning_level"):
+            crisis_risk_level = crisis_finding.metadata_json["warning_level"]
+        elif crisis_active:
+            crisis_risk_level = "Crisis Active"
+
+        # 7. Pending responses (unresponded negative mentions)
         pending_responses_count = sum(1 for m in mentions if (m.sentiment or "").lower() == "negative")
 
-        # 7. Recent mentions (top 5)
+        # 8. Recent mentions (top 5)
         recent_schemas = [
             MentionSchema(
                 id=m.id,
@@ -113,8 +145,12 @@ class DashboardService:
             total_mentions=total_mentions,
             crisis_active=crisis_active,
             crisis_count=crisis_count,
+            crisis_risk_level=crisis_risk_level,
             pending_responses_count=pending_responses_count,
             fraud_alerts_count=fraud_alerts_count,
+            suspicious_reviews_count=suspicious_reviews_count,
+            active_clusters_count=active_clusters_count,
+            top_issues=top_issues,
             recent_mentions=recent_schemas,
         )
 

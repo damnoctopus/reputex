@@ -202,3 +202,97 @@ def generate_alerts(
             return {"alert_id": alert.id, "status": "dispatched"}
 
     return run_async(_impl())
+
+
+@celery_app.task(name="tasks.scan_business_full")
+def scan_business_full(business_id: str) -> dict[str, Any]:
+    """Execute complete end-to-end asynchronous scan:
+
+    1. Multi-platform ingestion with failure isolation across Google, Reddit, X.
+    2. Issue discovery & cross-platform clustering.
+    3. Review authenticity & manipulation cluster analysis.
+    4. Crisis early warning evaluation & driver attribution.
+    5. Reputation score recomputation.
+    """
+
+    async def _impl():
+        async with AsyncSessionLocal() as session:
+            from app.models.business import Business
+            from app.models.platform import PlatformConnection
+            from app.repositories.platform_repository import PlatformConnectionRepository
+            from app.services.authenticity_service import ReviewAuthenticityService
+            from app.services.crisis_service import CrisisService
+            from app.services.ingestion_service import IngestionService
+            from app.services.issue_detection_service import IssueDetectionService
+            from app.services.reputation_service import ReputationService
+            from app.services.sentiment_service import SentimentService
+
+            biz = await session.get(Business, business_id)
+            user_id = biz.owner_id if biz else business_id
+
+            # 1. Multi-platform Ingestion with Failure Isolation
+            ingestion_service = IngestionService(session)
+            platform_repo = PlatformConnectionRepository(session)
+
+            # Ensure platform connections exist for Google, Reddit, Twitter
+            standard_platforms = ["google", "reddit", "twitter"]
+            for plat in standard_platforms:
+                await platform_repo.get_or_create(business_id, plat)
+
+            ingestion_results = []
+            active_conns = await platform_repo.list_active_for_business(business_id)
+            for conn in active_conns:
+                try:
+                    res = await ingestion_service.ingest_for_business_and_platform(business_id, conn.platform)
+                    ingestion_results.append(res.model_dump())
+                except Exception as exc:
+                    logger.error(f"Scan ingestion failed for {business_id} on {conn.platform}: {exc}")
+                    ingestion_results.append({
+                        "platform": conn.platform,
+                        "status": "error",
+                        "error_message": str(exc),
+                        "records_inserted": 0,
+                    })
+
+            # 2. Intelligence Pipeline: Sentiment
+            sentiment_service = SentimentService(session)
+            from app.models.mention import Mention
+            from sqlalchemy import select
+
+            stmt_mentions = select(Mention).where(Mention.business_id == business_id)
+            all_mentions = list((await session.execute(stmt_mentions)).scalars().all())
+            for m in all_mentions:
+                if not m.sentiment:
+                    try:
+                        await sentiment_service.analyze_mention(user_id, m.id)
+                    except Exception as e:
+                        logger.warning(f"Sentiment failed for {m.id}: {e}")
+
+            # 3. Issue Discovery & Clustering
+            issue_service = IssueDetectionService(session)
+            issues = await issue_service.detect_and_persist_issues(business_id)
+
+            # 4. Review Authenticity & Clusters
+            auth_service = ReviewAuthenticityService(session)
+            findings = await auth_service.analyze_business_authenticity(business_id)
+
+            # 5. Crisis Early Warning & Driver Attribution
+            crisis_service = CrisisService(session)
+            crisis_res = await crisis_service.evaluate_crisis_for_business(business_id)
+
+            # 6. Reputation Score Recomputation
+            rep_service = ReputationService(session)
+            rep_score = await rep_service.recalculate(user_id)
+
+            return {
+                "business_id": business_id,
+                "status": "completed",
+                "ingestion_results": ingestion_results,
+                "issues_count": len(issues),
+                "findings_count": len(findings),
+                "crisis_warning_level": crisis_res["warning_level"],
+                "reputation_score": rep_score.current_score,
+            }
+
+    return run_async(_impl())
+
