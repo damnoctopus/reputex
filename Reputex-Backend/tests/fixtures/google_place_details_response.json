@@ -1,0 +1,104 @@
+{
+  "reviews": [
+    {
+      "name": "places/ChIJN1t_tDeuEmsRUsoyG83frY4/reviews/ChdDSUhNMG9nS0VJQ0FnSUR4cHRLZl93RRAB",
+      "relativePublishTimeDescription": "2 weeks ago",
+      "rating": 5,
+      "text": {
+        "text": "Exceptional culinary journey! The chef personally checked on our table. Best dining spot in town hands down. The butter chicken was creamy and perfectly spiced.",
+        "languageCode": "en"
+      },
+      "originalText": {
+        "text": "Exceptional culinary journey! The chef personally checked on our table. Best dining spot in town hands down. The butter chicken was creamy and perfectly spiced.",
+        "languageCode": "en"
+      },
+      "authorAttribution": {
+        "displayName": "Ananya Roy",
+        "uri": "https://www.google.com/maps/contrib/117263916481234567890/reviews",
+        "photoUri": "https://lh3.googleusercontent.com/a/ACg8ocJ_sample_1"
+      },
+      "publishTime": "2026-08-20T14:30:00Z",
+      "googleMapsUri": "https://www.google.com/maps/reviews/data=!4m8!14m7!1m6!2m5!1sChdDSUhNMG9nS0VJQ0FnSUR4cHRLZl93RRAB!2m1!1s0x0:0x8ebfadc31b32ca52!3m1!1s2@1:CIHM0ogKEICAgIDxptKf_wE"
+    },
+    {
+      "name": "places/ChIJN1t_tDeuEmsRUsoyG83frY4/reviews/ChdDSUhNMG9nS0VJQ0FnSUR4cHRLZl93RRBC",
+      "relativePublishTimeDescription": "a month ago",
+      "rating": 3,
+      "text": {
+        "text": "Decent ambience and prompt seating. Paneer tikka was great, but mocktails took almost 25 minutes to arrive. Average experience overall.",
+        "languageCode": "en"
+      },
+      "originalText": {
+        "text": "Decent ambience and prompt seating. Paneer tikka was great, but mocktails took almost 25 minutes to arrive. Average experience overall.",
+        "languageCode": "en"
+      },
+      "authorAttribution": {
+        "displayName": "Priya Sharma",
+        "uri": "https://www.google.com/maps/contrib/109876543210987654321/reviews",
+        "photoUri": null
+      },
+      "publishTime": "2026-07-15T09:45:00Z",
+      "googleMapsUri": "https://www.google.com/maps/reviews/data=!4m8!14m7!1m6!2m5!1sChdDSUhNMG9nS0VJQ0FnSUR4cHRLZl93RRBC!2m1!1s0x0:0x8ebfadc31b32ca52!3m1!1s2@1:CIHM0ogKEICAgIDxptKf_wF"
+    },
+    {
+      "name": "places/ChIJN1t_tDeuEmsRUsoyG83frY4/reviews/ChdDSUhNMG9nS0VJQ0FnSUR4cHRLZl93RRBD",
+      "relativePublishTimeDescription": "2 months ago",
+      "rating": 1,
+      "text": {
+        "text": "Terrible experience. The mutton biryani was cold and smelled off. Staff was rude when we complained. Will never visit again.",
+        "languageCode": "en"
+      },
+      "originalText": {
+        "text": "Terrible experience. The mutton biryani was cold and smelled off. Staff was rude when we complained. Will never visit again.",
+        "languageCode": "en"
+      },
+      "authorAttribution": {
+        "displayName": "Rajesh Kumar",
+        "uri": "https://www.google.com/maps/contrib/101234567890123456789/reviews",
+        "photoUri": null
+      },
+      "publishTime": "2026-06-10T18:20:00Z",
+      "googleMapsUri": "https://www.google.com/maps/reviews/data=!4m8!14m7!1m6!2m5!1sChdDSUhNMG9nS0VJQ0FnSUR4cHRLZl93RRBD!2m1!1s0x0:0x8ebfadc31b32ca52!3m1!1s2@1:CIHM0ogKEICAgIDxptKf_wG"
+    },
+    {
+      "name": "places/ChIJN1t_tDeuEmsRUsoyG83frY4/reviews/ChdDSUhNMG9nS0VJQ0FnSUR4cHRLZl93RRBE",
+      "relativePublishTimeDescription": "3 months ago",
+      "rating": 4,
+      "text": {
+        "text": "Clean tables, fast billing, and courteous valets. Will surely visit again with family. The naan was fresh and perfectly charred.",
+        "languageCode": "en"
+      },
+      "originalText": {
+        "text": "Clean tables, fast billing, and courteous valets. Will surely visit again with family. The naan was fresh and perfectly charred.",
+        "languageCode": "en"
+      },
+      "authorAttribution": {
+        "displayName": "Siddharth Jain",
+        "uri": "https://www.google.com/maps/contrib/112345678901234567890/reviews",
+        "photoUri": "https://lh3.googleusercontent.com/a/ACg8ocJ_sample_4"
+      },
+      "publishTime": "2026-05-22T12:00:00Z",
+      "googleMapsUri": "https://www.google.com/maps/reviews/data=!4m8!14m7!1m6!2m5!1sChdDSUhNMG9nS0VJQ0FnSUR4cHRLZl93RRBE!2m1!1s0x0:0x8ebfadc31b32ca52!3m1!1s2@1:CIHM0ogKEICAgIDxptKf_wH"
+    },
+    {
+      "name": "places/ChIJN1t_tDeuEmsRUsoyG83frY4/reviews/ChdDSUhNMG9nS0VJQ0FnSUR4cHRLZl93RRBF",
+      "relativePublishTimeDescription": "4 months ago",
+      "rating": 5,
+      "text": {
+        "text": "",
+        "languageCode": "en"
+      },
+      "originalText": {
+        "text": "",
+        "languageCode": "en"
+      },
+      "authorAttribution": {
+        "displayName": "Rating Only User",
+        "uri": "https://www.google.com/maps/contrib/113456789012345678901/reviews",
+        "photoUri": null
+      },
+      "publishTime": "2026-04-10T08:30:00Z",
+      "googleMapsUri": "https://www.google.com/maps/reviews/data=!4m8!14m7!1m6!2m5!1sChdDSUhNMG9nS0VJQ0FnSUR4cHRLZl93RRBF!2m1!1s0x0:0x8ebfadc31b32ca52!3m1!1s2@1:CIHM0ogKEICAgIDxptKf_wI"
+    }
+  ]
+}

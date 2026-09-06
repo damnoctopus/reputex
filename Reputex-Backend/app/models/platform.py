@@ -25,6 +25,7 @@ class PlatformConnection(Base):
     platform: Mapped[str] = mapped_column(String(64), nullable=False, index=True)
     is_active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
     credentials: Mapped[dict[str, Any]] = mapped_column(JSON, default=dict, nullable=False)
+    platform_meta: Mapped[dict[str, Any]] = mapped_column(JSON, default=dict, nullable=False)
     last_polled_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     last_success_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     last_attempt_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)

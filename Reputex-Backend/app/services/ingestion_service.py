@@ -123,20 +123,32 @@ class IngestionService:
                 platform=standard_platform,
                 business_name=business.name,
                 keywords=keyword_tokens,
-                location=business.category,
+                location=business.location,
             )
             logger.info(
                 f"Ingestion [{job.id}] fetching for {business.name} on {standard_platform} using query: {query.query_string}"
             )
+
+            # Pass metadata (e.g. cached place_id) alongside credentials to connector.
+            # credentials = API secrets; platform_meta = platform-specific cached state.
+            connector_credentials = dict(conn.credentials)
+            connector_credentials["_metadata"] = dict(conn.platform_meta) if conn.platform_meta else {}
 
             raw_records = await connector.fetch_mentions(
                 business_name=business.name,
                 keywords=keyword_tokens,
                 since=conn.last_polled_at,
                 cursor=conn.cursor,
-                location=business.category,
-                credentials=conn.credentials,
+                location=business.location,
+                credentials=connector_credentials,
             )
+
+            # If connector discovered new metadata (e.g. Google place_id), persist it
+            if hasattr(connector, "get_discovered_metadata"):
+                discovered = connector.get_discovered_metadata()
+                if discovered:
+                    conn.platform_meta = {**(conn.platform_meta or {}), **discovered}
+                    await self.db.commit()
         except Exception as e:
             err_msg = f"Connector failure on {standard_platform} for business {business_id}: {e}"
             logger.exception(err_msg)
