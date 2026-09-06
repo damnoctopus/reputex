@@ -1,0 +1,11 @@
+targets:
+  $default:
+    builders:
+      freezed:
+        options:
+          make_collections_unmodifiable: false
+        generate_for:
+          - "lib/**/models/*.dart"
+      json_serializable:
+        generate_for:
+          - "lib/**/models/*.dart"

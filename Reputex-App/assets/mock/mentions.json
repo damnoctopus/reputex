@@ -1,0 +1,28 @@
+[
+  {
+    "id": "men_1",
+    "platform": "Reddit",
+    "author": "u/bangalore_foodie",
+    "content": "Had dinner at Spice Symphony yesterday. The mutton biryani was cold and smelled off. When we informed staff, they were dismissive. Never going back! Beware guys.",
+    "sentiment": "negative",
+    "sentiment_score": -0.84,
+    "is_fake": false,
+    "fraud_confidence": 0.12,
+    "timestamp": "2026-09-05T14:30:00Z",
+    "rating": 1.0,
+    "response_status": "drafted"
+  },
+  {
+    "id": "men_2",
+    "platform": "X",
+    "author": "@foodie_bangalore",
+    "content": "Spice Symphony in Indiranagar has the crispiest butter garlic naan in the city! Service was top notch too. Highly recommended for family dinners. ⭐⭐⭐⭐⭐",
+    "sentiment": "positive",
+    "sentiment_score": 0.92,
+    "is_fake": false,
+    "fraud_confidence": 0.05,
+    "timestamp": "2026-09-05T11:30:00Z",
+    "rating": 5.0,
+    "response_status": "none"
+  }
+]
