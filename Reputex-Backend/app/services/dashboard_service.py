@@ -50,14 +50,6 @@ class DashboardService:
         stmt = select(Mention).where(Mention.business_id == business_id).order_by(Mention.published_at.desc())
         mentions = list((await self.db.execute(stmt)).scalars().all())
 
-        # If zero mentions, trigger initial seed
-        if not mentions:
-            from app.services.mention_service import MentionService
-
-            m_service = MentionService(self.db)
-            await m_service.ingest_initial_batch(business_id)
-            mentions = list((await self.db.execute(stmt)).scalars().all())
-
         total_mentions = len(mentions)
 
         # 3. Sentiment Distribution

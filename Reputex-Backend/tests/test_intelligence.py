@@ -19,12 +19,13 @@ async def test_sentiment_and_aspects(client: AsyncClient):
     token = res.json()["tokens"]["access_token"]
     headers = {"Authorization": f"Bearer {token}"}
 
-    # Fetch mentions to get an ID
-    m_res = await client.get("/api/v1/mentions", headers=headers)
-    assert m_res.status_code == 200
-    items = m_res.json()["items"]
-    assert len(items) > 0
-    mention_id = items[0]["id"]
+    # Create mention for testing
+    post_res = await client.post(
+        "/api/v1/mentions",
+        json={"platform": "Google", "author": "Diner1", "content": "Food was delicious and the ambiance was fantastic!"},
+        headers=headers,
+    )
+    mention_id = post_res.json()["id"]
 
     # Analyze sentiment
     s_res = await client.post(f"/api/v1/sentiment/analyze/{mention_id}", headers=headers)
@@ -58,10 +59,13 @@ async def test_fraud_detection(client: AsyncClient):
     token = res.json()["tokens"]["access_token"]
     headers = {"Authorization": f"Bearer {token}"}
 
-    # Fetch mentions
-    m_res = await client.get("/api/v1/mentions", headers=headers)
-    items = m_res.json()["items"]
-    mention_id = items[0]["id"]
+    # Create mention for testing
+    post_res = await client.post(
+        "/api/v1/mentions",
+        json={"platform": "Google", "author": "SpamBot", "content": "Best restaurant ever! Click here http://spam.com"},
+        headers=headers,
+    )
+    mention_id = post_res.json()["id"]
 
     # Get fraud analysis for mention
     f_res = await client.get(f"/api/v1/fraud/{mention_id}", headers=headers)

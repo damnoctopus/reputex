@@ -281,15 +281,12 @@ async def test_fetch_reviews_metadata_contains_place_id(place_details_response):
 
 
 @pytest.mark.asyncio
-async def test_connector_falls_back_to_mock_without_key():
-    """GoogleConnector falls back to MockPlatformConnector when no API key."""
+async def test_connector_returns_empty_without_key():
+    """GoogleConnector returns empty list when no API key."""
     connector = GoogleConnector(api_key="")
     records = await connector.fetch_mentions("Spice Symphony", ["biryani"])
 
-    assert len(records) > 0
-    # Mock connector returns Google-platform records
-    for r in records:
-        assert r.platform == "Google"
+    assert records == []
 
 
 @pytest.mark.asyncio

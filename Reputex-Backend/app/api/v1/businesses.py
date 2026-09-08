@@ -2,7 +2,7 @@
 
 from typing import Optional
 
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, BackgroundTasks, Depends, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.database import get_db
@@ -117,9 +117,11 @@ async def delete_business(
 )
 async def trigger_business_scan(
     id: str,
+    background_tasks: BackgroundTasks,
     current_user_id: str = Depends(get_current_user_id),
     db: AsyncSession = Depends(get_db),
 ):
+    import uuid
     from app.core.exceptions import ForbiddenException, NotFoundException
     from app.repositories.business_repository import BusinessRepository
     from app.schemas.scan import ScanTriggerResponse
@@ -139,15 +141,13 @@ async def trigger_business_scan(
         task_res = tasks.scan_business_full.delay(id)
         task_id = getattr(task_res, "id", None)
     except Exception:
-        # Fallback to direct synchronous execution if Celery broker is offline
-        try:
-            tasks.scan_business_full(id)
-        except Exception:
-            pass
+        # Fallback to non-blocking background task execution via FastAPI when Celery is offline
+        task_id = f"bg_{uuid.uuid4().hex[:12]}"
+        background_tasks.add_task(tasks.scan_business_full, id)
 
     return ScanTriggerResponse(
         business_id=id,
-        status="triggered" if task_id else "completed",
+        status="triggered",
         task_id=task_id,
         message="Scan initiated across Google, Reddit, and X platforms",
     )
@@ -230,6 +230,7 @@ async def get_business_scan_status(
     summary="Trigger scan for active business",
 )
 async def trigger_active_business_scan(
+    background_tasks: BackgroundTasks,
     current_user_id: str = Depends(get_current_user_id),
     db: AsyncSession = Depends(get_db),
 ):
@@ -238,7 +239,7 @@ async def trigger_active_business_scan(
     from app.core.exceptions import NotFoundException
     if not biz:
         raise NotFoundException("Active business not found", code="BUSINESS_NOT_FOUND")
-    return await trigger_business_scan(biz.id, current_user_id=current_user_id, db=db)
+    return await trigger_business_scan(biz.id, background_tasks=background_tasks, current_user_id=current_user_id, db=db)
 
 
 @router.get(

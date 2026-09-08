@@ -45,15 +45,6 @@ class MentionService:
             reviews_only=reviews_only,
         )
 
-        # If zero mentions in DB, ingest initial mock batch for a populated experience
-        if total_count == 0 and filter_params.page == 1 and not filter_params.q:
-            await self.ingest_initial_batch(business_id)
-            items, total_count, total_pages, has_more = await self.mention_repo.list_paginated(
-                business_id=business_id,
-                filter_params=filter_params,
-                reviews_only=reviews_only,
-            )
-
         return PaginatedMentionsSchema(
             items=[MentionSchema.model_validate(m) for m in items],
             total_count=total_count,
@@ -89,10 +80,3 @@ class MentionService:
             mention.published_at = req.published_at
         created = await self.mention_repo.create(mention)
         return MentionSchema.model_validate(created)
-
-    async def ingest_initial_batch(self, business_id: str) -> None:
-        """Seed initial mentions through the real IngestionService pipeline."""
-        from app.services.ingestion_service import IngestionService
-
-        ingestion_service = IngestionService(self.db)
-        await ingestion_service.ingest_for_business_and_platform(business_id, "MockPlatform")

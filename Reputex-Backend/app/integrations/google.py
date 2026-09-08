@@ -29,7 +29,7 @@ class GoogleConnector(PlatformConnector):
     platform_name = "Google"
 
     def __init__(self, api_key: str | None = None):
-        self.api_key = api_key or settings.GOOGLE_PLACES_API_KEY
+        self.api_key = api_key if api_key is not None else settings.GOOGLE_PLACES_API_KEY
         self._client = GooglePlacesClient(api_key=self.api_key)
 
     async def fetch_mentions(
@@ -51,15 +51,12 @@ class GoogleConnector(PlatformConnector):
           5. Return RawMentionRecords for the normalization pipeline
         """
         # Resolve API key: credentials hold secrets, instance key is fallback
-        effective_key = (credentials or {}).get("api_key") or self.api_key
+        creds_key = (credentials or {}).get("api_key")
+        effective_key = creds_key if creds_key is not None else self.api_key
 
         if not effective_key:
-            logger.warning("GOOGLE_PLACES_API_KEY is not configured. Falling back to mock data.")
-            from app.integrations.mock_connector import MockPlatformConnector
-
-            return await MockPlatformConnector("Google").fetch_mentions(
-                business_name, keywords, since=since, cursor=cursor, location=location
-            )
+            logger.warning("GOOGLE_PLACES_API_KEY is not configured. Returning empty.")
+            return []
 
         # Update client with the effective key for this request
         client = GooglePlacesClient(api_key=effective_key)

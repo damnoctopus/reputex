@@ -96,7 +96,7 @@ async def test_reddit_connector_delegates_to_firecrawl_when_configured(reddit_fi
 
 
 @pytest.mark.asyncio
-async def test_reddit_connector_falls_back_to_mock_without_keys():
+async def test_reddit_connector_returns_empty_without_keys():
     connector = RedditConnector()
 
     with patch.object(connector._firecrawl_client, "is_configured", return_value=False):
@@ -106,9 +106,7 @@ async def test_reddit_connector_falls_back_to_mock_without_keys():
             credentials={},
         )
 
-    # Falls back to MockPlatformConnector("Reddit")
-    assert len(records) > 0
-    assert records[0].platform == "Reddit"
+    assert records == []
 
 
 @pytest.mark.asyncio

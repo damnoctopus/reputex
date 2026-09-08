@@ -1,13 +1,15 @@
-"""Integration tests for IngestionService lifecycle, incremental polling state, and failure resilience."""
-
+from datetime import UTC, datetime
 from unittest.mock import patch
 
 import pytest
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.integrations.google import GoogleConnector
+from app.integrations.reddit import RedditConnector
 from app.models.business import BrandKeyword, Business
 from app.repositories.ingestion_job_repository import IngestionJobRepository
 from app.repositories.platform_repository import PlatformConnectionRepository
+from app.schemas.ingestion import RawMentionRecord
 from app.services.ingestion_service import IngestionService
 
 
@@ -27,8 +29,22 @@ async def test_ingestion_job_and_polling_state_lifecycle(db_session: AsyncSessio
     job_repo = IngestionJobRepository(db_session)
     platform_repo = PlatformConnectionRepository(db_session)
 
-    # 1. Run ingestion for Google
-    result = await service.ingest_for_business_and_platform(biz.id, "Google")
+    # 1. Run ingestion for Google (mocking connector layer for unit test isolation)
+    sample_records = [
+        RawMentionRecord(
+            platform="Google",
+            external_id="google_test_mention_1",
+            source_url="https://maps.google.com/?cid=123",
+            title="Great pasta",
+            content="Delicious homemade pasta at Gourmet Kitchen.",
+            author="FoodLover",
+            published_at=datetime.now(UTC),
+            collected_at=datetime.now(UTC),
+            rating=5.0,
+        )
+    ]
+    with patch.object(GoogleConnector, "fetch_mentions", return_value=sample_records):
+        result = await service.ingest_for_business_and_platform(biz.id, "Google")
     assert result.status == "SUCCESS"
     assert result.records_fetched >= 1
     assert result.records_inserted >= 1
@@ -67,9 +83,10 @@ async def test_ingestion_failure_resilience(db_session: AsyncSession):
     platform_repo = PlatformConnectionRepository(db_session)
     job_repo = IngestionJobRepository(db_session)
 
-    # Mock connector throwing an exception (e.g. Rate limit or connection timeout)
-    with patch(
-        "app.integrations.mock_connector.MockPlatformConnector.fetch_mentions",
+    # Connector throwing an exception (e.g. Rate limit or connection timeout)
+    with patch.object(
+        RedditConnector,
+        "fetch_mentions",
         side_effect=RuntimeError("External API connection timed out"),
     ):
         result = await service.ingest_for_business_and_platform(biz.id, "Reddit")

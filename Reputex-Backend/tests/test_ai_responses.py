@@ -19,12 +19,13 @@ async def test_ai_response_studio_lifecycle(client: AsyncClient):
     token = res.json()["tokens"]["access_token"]
     headers = {"Authorization": f"Bearer {token}"}
 
-    # 2. Fetch Mentions to get a mention ID
-    m_res = await client.get("/api/v1/mentions", headers=headers)
-    assert m_res.status_code == 200
-    items = m_res.json()["items"]
-    assert len(items) > 0
-    mention_id = items[0]["id"]
+    # 2. Create mention to test AI response generation
+    post_res = await client.post(
+        "/api/v1/mentions",
+        json={"platform": "Google", "author": "UnhappyGuest", "content": "The food took 45 minutes to arrive and was cold.", "rating": 2.0},
+        headers=headers,
+    )
+    mention_id = post_res.json()["id"]
 
     # 3. Generate Response Draft
     gen_payload = {

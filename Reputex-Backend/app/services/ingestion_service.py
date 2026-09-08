@@ -48,14 +48,10 @@ class IngestionService:
         self.job_repo = IngestionJobRepository(db)
 
     def _resolve_connector(self, platform: str) -> PlatformConnector:
-        """Instantiate appropriate connector based on platform and environment settings."""
-        if settings.PLATFORM_MODE.lower() == "mock":
-            return MockPlatformConnector(platform=platform)
-
+        """Instantiate appropriate connector based on platform."""
         connector_cls = self.CONNECTOR_MAP.get(platform.strip().lower())
         if not connector_cls:
-            logger.info(f"No dedicated connector for '{platform}'. Falling back to MockPlatformConnector.")
-            return MockPlatformConnector(platform=platform)
+            raise ValueError(f"No connector available for platform '{platform}'")
 
         return connector_cls()
 

@@ -191,7 +191,12 @@ class GooglePlacesClient:
                 "reviews.originalText,"
                 "reviews.authorAttribution,"
                 "reviews.publishTime,"
-                "reviews.googleMapsUri"
+                "reviews.googleMapsUri,"
+                "reviewSummary,"
+                "generativeSummary,"
+                "rating,"
+                "userRatingCount,"
+                "displayName"
             ),
         }
 
@@ -206,16 +211,46 @@ class GooglePlacesClient:
                     data = resp.json()
                     raw_reviews = data.get("reviews", [])
 
-                    if not raw_reviews:
-                        logger.info(f"No reviews returned for place_id={place_id}.")
-                        return []
+                    if raw_reviews:
+                        records = self._parse_reviews(raw_reviews, place_id, google_maps_uri)
+                        logger.info(
+                            f"Parsed {len(records)} reviews from Google for place_id={place_id} "
+                            f"(API returns max 5 recent reviews)."
+                        )
+                        return records
 
-                    records = self._parse_reviews(raw_reviews, place_id, google_maps_uri)
-                    logger.info(
-                        f"Parsed {len(records)} reviews from Google for place_id={place_id} "
-                        f"(API returns max 5 recent reviews)."
-                    )
-                    return records
+                    # Fallback to authentic Google Review Synthesis if individual reviews are restricted
+                    summary_obj = data.get("reviewSummary", {})
+                    gen_summary = data.get("generativeSummary", {}).get("overview", {})
+                    summary_text = summary_obj.get("text", {}).get("text", "") or gen_summary.get("text", "")
+                    if summary_text:
+                        rating = data.get("rating")
+                        reviews_uri = summary_obj.get("reviewsUri") or google_maps_uri
+                        user_rating_count = data.get("userRatingCount", 0)
+                        now = datetime.now(UTC)
+                        record = RawMentionRecord(
+                            platform="Google",
+                            external_id=f"google_summary_{place_id}",
+                            source_url=reviews_uri,
+                            title=f"Google Customer Review Summary ({user_rating_count} reviews, {rating}★)" if rating else "Google Customer Review Summary",
+                            content=summary_text,
+                            author="Google Verified Reviews (AI Synthesis)",
+                            published_at=now,
+                            collected_at=now,
+                            rating=float(rating) if rating is not None else None,
+                            engagement={"likes": user_rating_count, "shares": 0, "comments": 0},
+                            metadata={
+                                "place_id": place_id,
+                                "is_summary": True,
+                                "user_rating_count": user_rating_count,
+                            },
+                            raw_payload=data,
+                        )
+                        logger.info(f"Synthesized Google Review Summary mention for place_id={place_id}")
+                        return [record]
+
+                    logger.info(f"No reviews returned for place_id={place_id}.")
+                    return []
 
                 elif resp.status_code in (429, 500, 502, 503):
                     logger.warning(

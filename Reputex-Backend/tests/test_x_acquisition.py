@@ -94,7 +94,7 @@ async def test_x_connector_delegates_to_firecrawl_when_configured(x_fixture):
 
 
 @pytest.mark.asyncio
-async def test_x_connector_falls_back_to_mock_without_keys():
+async def test_x_connector_returns_empty_without_keys():
     connector = TwitterConnector()
 
     with patch.object(connector._firecrawl_client, "is_configured", return_value=False):
@@ -104,8 +104,7 @@ async def test_x_connector_falls_back_to_mock_without_keys():
             credentials={},
         )
 
-    assert len(records) > 0
-    assert records[0].platform == "X"
+    assert records == []
 
 
 @pytest.mark.asyncio

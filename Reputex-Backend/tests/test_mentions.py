@@ -21,7 +21,16 @@ async def test_mentions_pagination_and_filtering(client: AsyncClient):
     token = reg_res.json()["tokens"]["access_token"]
     headers = {"Authorization": f"Bearer {token}"}
 
-    # 2. Get mentions feed (triggers auto-seeding with mock initial batch)
+    # 2. Explicitly create test mentions via API
+    for item in [
+        {"platform": "Reddit", "author": "u/foodie", "content": "Great food", "sentiment": "positive", "rating": 5.0},
+        {"platform": "Reddit", "author": "u/critic", "content": "Terrible service", "sentiment": "negative", "rating": 1.0},
+        {"platform": "Google", "author": "Bot123", "content": "Bad spam review", "sentiment": "negative", "is_fake": True, "rating": 1.0},
+        {"platform": "X", "author": "@diner", "content": "Amazing biryani!", "sentiment": "positive", "rating": 4.5},
+        {"platform": "Google", "author": "Regular", "content": "Decent dinner", "sentiment": "neutral", "rating": 3.0},
+    ]:
+        await client.post("/api/mentions", json=item, headers=headers)
+
     feed_res = await client.get("/api/mentions", headers=headers)
     assert feed_res.status_code == 200
     feed_data = feed_res.json()
@@ -106,9 +115,13 @@ async def test_mentions_tenant_isolation(client: AsyncClient):
     token_b = res_b.json()["tokens"]["access_token"]
     headers_b = {"Authorization": f"Bearer {token_b}"}
 
-    # Populate mentions for User A
-    feed_a = await client.get("/api/mentions", headers=headers_a)
-    mention_a_id = feed_a.json()["items"][0]["id"]
+    # Create a mention for User A
+    m_res = await client.post(
+        "/api/mentions",
+        json={"platform": "Reddit", "author": "u/test", "content": "Private review for A"},
+        headers=headers_a,
+    )
+    mention_a_id = m_res.json()["id"]
 
     # User B attempts to access User A's mention -> 404 (Not Found in User B's tenant)
     unauthorized_fetch = await client.get(f"/api/mentions/{mention_a_id}", headers=headers_b)

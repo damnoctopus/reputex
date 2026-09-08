@@ -75,12 +75,8 @@ class RedditConnector(PlatformConnector):
 
         provider = self._resolve_provider(credentials)
         if not provider:
-            logger.warning("RedditConnector: No live provider configured. Falling back to mock connector.")
-            from app.integrations.mock_connector import MockPlatformConnector
-
-            return await MockPlatformConnector("Reddit").fetch_mentions(
-                business_name, keywords, since=since, cursor=cursor, location=location
-            )
+            logger.warning("RedditConnector: No live provider configured. Returning empty.")
+            return []
 
         try:
             records = await provider.search_mentions(
@@ -92,13 +88,7 @@ class RedditConnector(PlatformConnector):
             return records
         except Exception as e:
             logger.error(f"RedditConnector provider execution failed: {e}")
-            if settings.PLATFORM_MODE.lower() == "mock":
-                from app.integrations.mock_connector import MockPlatformConnector
-
-                return await MockPlatformConnector("Reddit").fetch_mentions(
-                    business_name, keywords, since=since, cursor=cursor, location=location
-                )
-            raise
+            return []
 
     async def fetch_reviews(
         self,

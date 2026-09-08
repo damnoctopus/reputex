@@ -45,21 +45,21 @@ class FirecrawlClient:
         timeout: float = _DEFAULT_TIMEOUT,
         max_retries: int = _MAX_RETRIES,
     ):
-        self._api_key = api_key or settings.FIRECRAWL_API_KEY
+        self._api_key = api_key if api_key is not None else settings.FIRECRAWL_API_KEY
         self._base_url = (base_url or settings.FIRECRAWL_BASE_URL).rstrip("/")
         self._timeout = timeout
         self._max_retries = max_retries
 
     def is_configured(self, api_key: str | None = None) -> bool:
         """Check whether Firecrawl credentials are present and enabled."""
-        key = api_key or self._api_key or settings.FIRECRAWL_API_KEY
+        key = api_key if api_key is not None else (self._api_key if self._api_key is not None else settings.FIRECRAWL_API_KEY)
         if not key:
             return False
         # If an explicit key was provided, treat as configured. Otherwise check settings flag
-        return bool(key and (settings.FIRECRAWL_ENABLED or api_key or self._api_key))
+        return bool(settings.FIRECRAWL_ENABLED or api_key or self._api_key)
 
     def _get_headers(self, api_key: str | None = None) -> dict[str, str]:
-        key = api_key or self._api_key or settings.FIRECRAWL_API_KEY
+        key = api_key if api_key is not None else (self._api_key if self._api_key is not None else settings.FIRECRAWL_API_KEY)
         return {
             "Content-Type": "application/json",
             "Authorization": f"Bearer {key}",
@@ -77,7 +77,7 @@ class FirecrawlClient:
         Returns a list of search result dictionaries containing URLs, titles,
         markdown content, and metadata.
         """
-        effective_key = api_key or self._api_key or settings.FIRECRAWL_API_KEY
+        effective_key = api_key if api_key is not None else (self._api_key if self._api_key is not None else settings.FIRECRAWL_API_KEY)
         if not effective_key:
             logger.warning("FirecrawlClient.search: no API key configured.")
             return []
@@ -163,7 +163,7 @@ class FirecrawlClient:
 
         Returns a dictionary containing markdown and metadata, or None on failure.
         """
-        effective_key = api_key or self._api_key or settings.FIRECRAWL_API_KEY
+        effective_key = api_key if api_key is not None else (self._api_key if self._api_key is not None else settings.FIRECRAWL_API_KEY)
         if not effective_key:
             logger.warning("FirecrawlClient.scrape: no API key configured.")
             return None

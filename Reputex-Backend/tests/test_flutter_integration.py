@@ -87,6 +87,13 @@ async def test_flutter_real_api_service_full_contract(client: AsyncClient):
     assert "platform_breakdown" in analytics_res.json()
 
     # ── 4. Mentions (/api/mentions) ──
+    post_m = await client.post(
+        "/api/mentions",
+        json={"platform": "Google", "author": "FlutterFan", "content": "Superb dining experience!", "rating": 5.0},
+        headers=headers,
+    )
+    assert post_m.status_code == 201
+
     m_res = await client.get(
         "/api/mentions",
         params={"page": 1, "limit": 10, "sort_by": "newest"},
