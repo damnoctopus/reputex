@@ -21,7 +21,7 @@ import '../../features/sentiment/domain/models/sentiment_analytics.dart';
 
 /// Clean API service interface abstracting all REST communication.
 ///
-/// Both [MockApiService] and [RealApiService] implement this contract.
+/// Implemented by [RealApiService] to interface with the FastAPI backend.
 abstract class IApiService {
   // ── Authentication ──
   Future<AuthResponse> login({required String email, required String password});

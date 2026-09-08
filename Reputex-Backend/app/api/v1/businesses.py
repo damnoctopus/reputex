@@ -136,14 +136,9 @@ async def trigger_business_scan(
     if not has_access:
         raise ForbiddenException("Access denied to business", code="FORBIDDEN")
 
-    task_id = None
-    try:
-        task_res = tasks.scan_business_full.delay(id)
-        task_id = getattr(task_res, "id", None)
-    except Exception:
-        # Fallback to non-blocking background task execution via FastAPI when Celery is offline
-        task_id = f"bg_{uuid.uuid4().hex[:12]}"
-        background_tasks.add_task(tasks.scan_business_full, id)
+    # Use FastAPI BackgroundTasks directly
+    task_id = f"bg_{uuid.uuid4().hex[:12]}"
+    background_tasks.add_task(tasks.scan_business_full, id)
 
     return ScanTriggerResponse(
         business_id=id,

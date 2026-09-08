@@ -129,7 +129,7 @@ async def test_periodic_active_businesses_discovery(db_session: AsyncSession):
 
     service = IngestionService(db_session)
 
-    with patch("app.workers.tasks.ingest_platform_for_business.delay") as mock_delay:
+    with patch("asyncio.create_task") as mock_delay:
         summary = await service.ingest_periodic_active_businesses()
 
     assert summary["status"] == "scheduled"

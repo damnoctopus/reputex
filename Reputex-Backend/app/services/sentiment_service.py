@@ -160,10 +160,16 @@ class SentimentService:
         self.user_repo = UserRepository(db)
         self.business_repo = BusinessRepository(db)
 
-    async def _resolve_business_id(self, user_id: str) -> str:
-        user = await self.user_repo.get_by_id(user_id)
+    async def _resolve_business_id(self, user_id_or_business_id: str) -> str:
+        from app.models.business import Business
+        # Check if the ID is actually a business ID
+        business = await self.db.get(Business, user_id_or_business_id)
+        if business:
+            return business.id
+
+        user = await self.user_repo.get_by_id(user_id_or_business_id)
         if not user or not user.business_id:
-            businesses = await self.business_repo.list_by_owner(user_id)
+            businesses = await self.business_repo.list_by_owner(user_id_or_business_id)
             if businesses:
                 return businesses[0].id
             raise NotFoundException("Active business not found", code="BUSINESS_NOT_FOUND")

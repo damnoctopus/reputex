@@ -15,13 +15,11 @@ class RegisterScreen extends ConsumerStatefulWidget {
 
 class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   final _formKey = GlobalKey<FormState>();
-  final _nameController = TextEditingController(text: 'Adithya');
-  final _emailController = TextEditingController(
-    text: 'adira@spicesymphony.com',
-  );
-  final _phoneController = TextEditingController(text: '+91 98765 43210');
-  final _passwordController = TextEditingController(text: 'password123');
-  final _businessNameController = TextEditingController(text: 'Spice Symphony');
+  final _nameController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _phoneController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _businessNameController = TextEditingController();
   String _businessCategory = 'Restaurant';
   bool _obscurePassword = true;
 

@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../app/theme.dart';
-import '../../../../core/network/api_provider.dart';
 import '../../../auth/presentation/providers/auth_provider.dart';
 import '../../../onboarding/presentation/providers/business_provider.dart';
 
@@ -15,10 +14,9 @@ class SettingsScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final authState = ref.watch(authProvider);
     final businessState = ref.watch(businessProvider);
-    final isMockApi = ref.watch(useMockApiProvider);
 
-    final businessName = businessState.valueOrNull?.name ?? 'Spice Symphony';
-    final userEmail = authState.user?.email ?? 'adithya@spicesymphony.com';
+    final businessName = businessState.valueOrNull?.name ?? 'My Business';
+    final userEmail = authState.user?.email ?? 'user@reputex.ai';
 
     return Scaffold(
       appBar: AppBar(title: const Text('Settings')),
@@ -28,7 +26,7 @@ class SettingsScreen extends ConsumerWidget {
           // ── Business ──
           const _SectionHeader(title: 'Business'),
           _SettingsTile(
-            icon: Icons.business_outlined,
+            icon: Icons.store_rounded,
             title: 'Business Profile',
             subtitle: businessName,
             onTap: () {},
@@ -38,29 +36,11 @@ class SettingsScreen extends ConsumerWidget {
 
           // ── API Configuration ──
           const _SectionHeader(title: 'Backend Configuration'),
-          _SettingsTile(
-            icon: Icons.sync_alt_rounded,
-            title: 'API Source',
-            subtitle: isMockApi
-                ? 'Mock In-Memory Service (Offline)'
-                : 'Real FastAPI Backend (REST/Dio)',
-            trailing: Switch(
-              value: isMockApi,
-              onChanged: (val) {
-                ref.read(useMockApiProvider.notifier).state = val;
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      val
-                          ? 'Switched to Mock API service'
-                          : 'Switched to Real REST API service',
-                    ),
-                    duration: const Duration(seconds: 2),
-                  ),
-                );
-              },
-              activeThumbColor: AppColors.primary,
-            ),
+          const _SettingsTile(
+            icon: Icons.cloud_done_rounded,
+            title: 'Backend Service',
+            subtitle: 'Live FastAPI Backend (Real Data Pipeline)',
+            trailing: Icon(Icons.check_circle_rounded, color: AppColors.positive),
           ),
 
           const SizedBox(height: AppSpacing.xl),

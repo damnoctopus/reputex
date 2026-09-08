@@ -263,9 +263,9 @@ class IngestionService:
         if inserted_count > 0 and persisted_mentions:
             try:
                 from app.workers.tasks import pipeline_process_mentions
-
+                import asyncio
                 new_mention_ids = [m.id for m in persisted_mentions[:inserted_count]]
-                pipeline_process_mentions.delay(business_id, new_mention_ids)
+                asyncio.create_task(pipeline_process_mentions(business_id, new_mention_ids))
                 logger.info(f"Dispatched intelligence pipeline hook for {len(new_mention_ids)} new mentions.")
             except Exception as e:
                 logger.warning(f"Could not dispatch async intelligence hook: {e}")
@@ -313,7 +313,8 @@ class IngestionService:
             conns = await self.platform_repo.list_active_for_business(b_id)
             platforms = [c.platform for c in conns] if conns else default_platforms
             for plat in platforms:
-                ingest_platform_for_business.delay(b_id, plat)
+                import asyncio
+                asyncio.create_task(ingest_platform_for_business(b_id, plat))
                 enqueued_count += 1
 
         return {

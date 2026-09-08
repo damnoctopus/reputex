@@ -6,6 +6,7 @@ import '../features/auth/presentation/screens/register_screen.dart';
 import '../features/auth/presentation/screens/splash_screen.dart';
 import '../features/onboarding/presentation/screens/business_setup_screen.dart';
 import '../features/dashboard/presentation/screens/dashboard_screen.dart';
+import '../features/dashboard/presentation/screens/scraping_status_screen.dart';
 import '../features/mentions/presentation/screens/mentions_screen.dart';
 import '../features/mentions/presentation/screens/review_detail_screen.dart';
 import '../features/alerts/presentation/screens/alerts_screen.dart';
@@ -35,6 +36,11 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: '/onboarding',
       builder: (context, state) => const BusinessSetupScreen(),
+    ),
+    GoRoute(
+      path: '/scraping',
+      parentNavigatorKey: _rootNavigatorKey,
+      builder: (context, state) => const ScrapingStatusScreen(),
     ),
 
     // ── Main app shell with bottom navigation ──

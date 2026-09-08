@@ -6,14 +6,14 @@ class ApiConstants {
   ApiConstants._();
 
   /// Toggle between mock and real backend.
-  static const bool useMockApi = true;
+  static const bool useMockApi = false;
 
   /// Base URL for the FastAPI backend.
   static const String baseUrl = 'http://10.0.2.2:8000/api';
 
   /// Request timeout.
-  static const Duration connectTimeout = Duration(seconds: 15);
-  static const Duration receiveTimeout = Duration(seconds: 15);
+  static const Duration connectTimeout = Duration(seconds: 30);
+  static const Duration receiveTimeout = Duration(seconds: 30);
 
   // ── Authentication ──
   static const String login = '/auth/login';

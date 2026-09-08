@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../app/theme.dart';
 import '../../../../core/constants/app_constants.dart';
+import '../../../../core/network/api_provider.dart';
 import '../providers/business_provider.dart';
 
 /// Business setup wizard — onboarding flow after registration.
@@ -20,20 +21,14 @@ class _BusinessSetupScreenState extends ConsumerState<BusinessSetupScreen> {
   int _currentStep = 0;
 
   // Step 1: Business Info
-  final _businessNameController = TextEditingController(text: 'Spice Symphony');
-  final _locationController = TextEditingController(
-    text: 'Indiranagar, Bengaluru',
-  );
+  final _businessNameController = TextEditingController();
+  final _locationController = TextEditingController();
   final _descriptionController = TextEditingController();
   String _category = 'Restaurant';
 
   // Step 2: Keywords
   final _keywordController = TextEditingController();
-  final List<String> _keywords = [
-    'Spice Symphony',
-    'Spice Symphony Indiranagar',
-    'best biryani Indiranagar',
-  ];
+  final List<String> _keywords = [];
 
   // Step 3: Platforms
   final Map<String, bool> _platforms = {
@@ -51,6 +46,25 @@ class _BusinessSetupScreenState extends ConsumerState<BusinessSetupScreen> {
   }
 
   void _nextStep() {
+    if (_currentStep == 0) {
+      if (_businessNameController.text.trim().isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Please enter your business name to continue'),
+            backgroundColor: AppColors.accentWarning,
+          ),
+        );
+        return;
+      }
+    } else if (_currentStep == 1) {
+      if (_keywords.isEmpty) {
+        final bizName = _businessNameController.text.trim();
+        if (bizName.isNotEmpty) {
+          _keywords.add(bizName);
+        }
+      }
+    }
+
     if (_currentStep < 2) {
       _pageController.nextPage(
         duration: AppDurations.normal,
@@ -83,29 +97,49 @@ class _BusinessSetupScreenState extends ConsumerState<BusinessSetupScreen> {
   }
 
   Future<void> _finishSetup() async {
+    final businessName = _businessNameController.text.trim();
+    if (businessName.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please enter your business name')),
+      );
+      setState(() => _currentStep = 0);
+      _pageController.jumpToPage(0);
+      return;
+    }
+
     final selectedPlatforms = _platforms.entries
         .where((e) => e.value)
         .map((e) => e.key)
         .toList();
 
+    final location = _locationController.text.trim();
+    final keywords = _keywords.isNotEmpty
+        ? _keywords
+        : [
+            businessName,
+            if (location.isNotEmpty) '$businessName $location',
+          ];
+
     await ref
         .read(businessProvider.notifier)
         .setupBusiness(
-          name: _businessNameController.text.trim().isNotEmpty
-              ? _businessNameController.text.trim()
-              : 'Spice Symphony',
+          name: businessName,
           category: _category,
-          location: _locationController.text.trim(),
-          keywords: _keywords.isNotEmpty
-              ? _keywords
-              : const ['Spice Symphony', 'Spice Symphony Indiranagar'],
+          location: location,
+          keywords: keywords,
           platforms: selectedPlatforms.isNotEmpty
               ? selectedPlatforms
               : const ['Google', 'JustDial', 'Reddit'],
         );
 
+    try {
+      await ref.read(apiServiceProvider).triggerScan();
+    } catch (_) {
+      // Ignored: scraping status screen handles scan state & polling
+    }
+
     if (mounted) {
-      context.go('/dashboard');
+      context.go('/scraping');
     }
   }
 

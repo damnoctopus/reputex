@@ -10,6 +10,7 @@ import '../../../../core/widgets/platform_icon.dart';
 import '../../../../core/widgets/score_gauge.dart';
 import '../../../../core/widgets/sentiment_badge.dart';
 import '../../../auth/presentation/providers/auth_provider.dart';
+import '../../../onboarding/presentation/providers/business_provider.dart';
 import '../providers/dashboard_provider.dart';
 
 /// Main dashboard screen — consumes [dashboardProvider] and [authProvider].
@@ -19,8 +20,10 @@ class DashboardScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final authState = ref.watch(authProvider);
+    final businessState = ref.watch(businessProvider);
     final dashboardAsync = ref.watch(dashboardProvider);
-    final userName = authState.user?.fullName ?? 'Adithya';
+    final userName = authState.user?.fullName ?? 'Business Owner';
+    final businessName = businessState.valueOrNull?.name ?? 'My Business';
 
     return Scaffold(
       body: SafeArea(
@@ -47,7 +50,7 @@ class DashboardScreen extends ConsumerWidget {
                           ),
                           const SizedBox(height: AppSpacing.xs),
                           Text(
-                            'Spice Symphony',
+                            businessName,
                             style: Theme.of(context)
                                 .textTheme
                                 .bodyMedium
@@ -475,19 +478,13 @@ class _ScanButtonState extends ConsumerState<_ScanButton> {
       final api = ref.read(apiServiceProvider);
       await api.triggerScan();
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Reputation scan complete across all platforms!'),
-            backgroundColor: AppColors.positive,
-          ),
-        );
-        ref.read(dashboardProvider.notifier).refresh();
+        context.push('/scraping');
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Scan failed: $e'),
+            content: Text('Scan trigger failed: $e'),
             backgroundColor: AppColors.negative,
           ),
         );

@@ -3,6 +3,7 @@
 from datetime import UTC, datetime
 
 from sqlalchemy import select
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models.platform import PlatformConnection
@@ -48,9 +49,15 @@ class PlatformConnectionRepository(BaseRepository[PlatformConnection]):
             updated_at=datetime.now(UTC),
         )
         self.db.add(conn)
-        await self.db.commit()
-        await self.db.refresh(conn)
-        return conn
+        try:
+            await self.db.commit()
+            return conn
+        except Exception:
+            await self.db.rollback()
+            existing = await self.get_by_business_and_platform(business_id, platform)
+            if existing:
+                return existing
+            return conn
 
     async def record_poll_result(
         self,

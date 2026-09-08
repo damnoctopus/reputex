@@ -60,9 +60,16 @@ async def client(db_session: AsyncSession) -> AsyncGenerator[AsyncClient, None]:
 
 
 @pytest.fixture(autouse=True)
-def mock_celery_broker(monkeypatch):
-    """Prevent Celery tasks from attempting network connections to Redis in tests."""
-    from unittest.mock import MagicMock
+def mock_async_session_local(monkeypatch):
+    """Ensure background tasks use the test in-memory database."""
+    monkeypatch.setattr("app.workers.tasks.AsyncSessionLocal", TestAsyncSessionLocal)
+
+
+@pytest.fixture(autouse=True)
+def mock_fire_and_forget_tasks(monkeypatch):
+    """Prevent fire-and-forget background tasks from running in tests (like Celery mock did)."""
+    async def mock_coro(*args, **kwargs):
+        pass
 
     from app.workers import tasks
 
@@ -75,8 +82,5 @@ def mock_celery_broker(monkeypatch):
         "calculate_reputation",
         "detect_crisis",
         "generate_alerts",
-        "scan_business_full",
     ]:
-        task_obj = getattr(tasks, task_name, None)
-        if task_obj and hasattr(task_obj, "delay"):
-            monkeypatch.setattr(task_obj, "delay", MagicMock(return_value=None))
+        monkeypatch.setattr(tasks, task_name, mock_coro)

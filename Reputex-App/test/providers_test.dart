@@ -2,11 +2,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:reputex_mobile/core/network/api_provider.dart';
-import 'package:reputex_mobile/core/network/mock_api_service.dart';
 import 'package:reputex_mobile/features/alerts/presentation/providers/alerts_provider.dart';
 import 'package:reputex_mobile/features/auth/presentation/providers/auth_provider.dart';
 import 'package:reputex_mobile/features/dashboard/presentation/providers/dashboard_provider.dart';
 import 'package:reputex_mobile/features/mentions/presentation/providers/mentions_feed_provider.dart';
+
+import 'fake_api_service.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -17,7 +18,7 @@ void main() {
     FlutterSecureStorage.setMockInitialValues({});
     container = ProviderContainer(
       overrides: [
-        apiServiceProvider.overrideWithValue(MockApiService()),
+        apiServiceProvider.overrideWithValue(FakeApiService()),
       ],
     );
   });
