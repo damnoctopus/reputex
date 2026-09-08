@@ -133,7 +133,22 @@ class ResponseService:
             await db.refresh(default_alert)
             alerts = [default_alert]
 
-        return [AlertItemResponse.model_validate(a) for a in alerts]
+        return [
+            AlertItemResponse(
+                id=str(a.id),
+                business_id=str(a.business_id),
+                title=a.title,
+                message=a.message,
+                severity=a.severity or "medium",
+                type=a.alert_type or "system",
+                alert_type=a.alert_type or "system",
+                is_read=a.is_read,
+                timestamp=a.created_at,
+                created_at=a.created_at,
+                metadata_json=a.metadata_json or {},
+            )
+            for a in alerts
+        ]
 
     @staticmethod
     async def mark_alert_as_read(db: AsyncSession, business_id: str, alert_id: str) -> None:

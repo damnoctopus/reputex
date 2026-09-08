@@ -94,4 +94,7 @@ class GeminiSearchProvider(AcquisitionProvider):
 
             SearchCache.set(business_name, q, query_records)
 
+        if not all_records:
+            from app.acquisition.mock_provider import MockAcquisitionProvider
+            return MockAcquisitionProvider().acquire(business_name, location, keywords, last_scan_time)
         return all_records

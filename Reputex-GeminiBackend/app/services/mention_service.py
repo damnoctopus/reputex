@@ -123,9 +123,11 @@ class MentionService:
         return PaginatedMentions(
             items=response_items,
             total=total,
+            total_count=total,
             page=page,
             limit=limit,
             total_pages=total_pages,
+            has_more=page < total_pages,
         )
 
     @staticmethod

@@ -119,7 +119,7 @@ async def get_dashboard_summary(
         active_clusters_count=active_clusters_count,
         top_issues=top_issues,
         recent_mentions=recent_mentions,
-        deterioration_assessment=await DeteriorationService.get_deterioration_assessment(db, str(biz.id)),
+        deterioration_assessment=None,
     )
 
 

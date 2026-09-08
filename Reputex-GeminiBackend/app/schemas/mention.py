@@ -36,6 +36,8 @@ class MentionResponse(BaseModel):
 class PaginatedMentions(BaseModel):
     items: List[MentionResponse]
     total: int
-    page: int
-    limit: int
-    total_pages: int
+    total_count: int
+    page: int = 1
+    limit: int = 20
+    total_pages: int = 1
+    has_more: bool = False

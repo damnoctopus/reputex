@@ -35,8 +35,12 @@ class AlertItemResponse(BaseModel):
     business_id: str
     title: str
     message: str
-    severity: str
-    alert_type: str
-    is_read: bool
+    severity: str = "medium"
+    type: str = "system"
+    alert_type: Optional[str] = None
+    is_read: bool = False
+    timestamp: datetime
+    created_at: Optional[datetime] = None
+    reference_id: Optional[str] = None
+    reference_type: Optional[str] = None
     metadata_json: Dict[str, Any] = Field(default_factory=dict)
-    created_at: datetime
