@@ -121,3 +121,76 @@ class MockGeminiProvider:
         if "rude" in review_text.lower() or "terrible" in review_text.lower() or "poisoning" in review_text.lower():
             return f"Dear Customer, thank you for bringing this to our attention. At {business_name}, we take our service and safety standards extremely seriously. Please contact our management team directly so we can make this right immediately."
         return f"Hello! Thank you so much for your kind words and for taking the time to review {business_name}. We look forward to serving you again soon!"
+
+    async def assess_reputation_deterioration(
+        self,
+        business_name: str,
+        business_category: str,
+        review_summary: str,
+        recent_reviews: list[dict],
+        horizon_days: int = 14,
+    ) -> GeminiDeteriorationResponse:
+        """Deterministic mock evaluation of future reputation deterioration."""
+        from app.schemas.gemini import GeminiDeteriorationResponse
+
+        total = len(recent_reviews)
+        negative_count = sum(
+            1 for r in recent_reviews
+            if (r.get("rating") is not None and r.get("rating") <= 2.0)
+            or any(w in r.get("content", "").lower() for w in ["horrible", "rude", "worst", "attitude", "bad", "terrible", "awful", "unacceptable", "cold", "dirty"])
+        )
+        neg_ratio = negative_count / max(total, 1)
+
+        if neg_ratio >= 0.25 or negative_count >= 5:
+            probability = min(0.60 + (neg_ratio * 0.35), 0.95)
+            risk_level = "HIGH" if probability < 0.80 else "CRITICAL"
+            is_sustained = True
+            drivers = [
+                f"Negative feedback constitutes {neg_ratio*100:.1f}% of recent customer mentions",
+                "Complaints are recurring across multiple platforms (Google, Reddit, X)",
+                "Specific convergence on service quality, wait times, and staff behavior",
+            ]
+            converging = ["Customer Service & Staff Behavior", "Wait Time & Delays", "Food Quality Consistency"]
+            opinion = (
+                f"Based on recent customer mentions across platforms, {business_name} is showing clear indicators "
+                f"of a sustained reputation decline rather than an isolated blip. Negative mentions are converging on "
+                f"specific operational pain points with high emotional intensity. Without proactive management intervention, "
+                f"overall customer trust and rating trajectories are projected to deteriorate further over the next {horizon_days} days."
+            )
+            actions = [
+                "Address staff behavior and front-of-house training immediately.",
+                "Publicly respond to top negative Reddit and Google reviews with empathetic resolution offers.",
+                "Monitor social mentions daily to intercept viral complaints before escalation.",
+            ]
+        else:
+            probability = max(0.12, neg_ratio * 0.6)
+            risk_level = "LOW" if probability < 0.35 else "MODERATE"
+            is_sustained = False
+            drivers = [
+                "Customer sentiment is predominantly positive or neutral",
+                "Isolated negative complaints lack topical convergence",
+                "Rating distribution remains stable relative to historical baseline",
+            ]
+            converging = []
+            opinion = (
+                f"Recent negative feedback for {business_name} represents normal, isolated customer variance (a temporary blip) "
+                f"rather than a systematic decline. Core customer satisfaction signals remain healthy across Google, Reddit, and X."
+            )
+            actions = [
+                "Continue standard quality assurance and customer care.",
+                "Acknowledge constructive customer feedback politely.",
+            ]
+
+        return GeminiDeteriorationResponse(
+            deterioration_probability=round(probability, 2),
+            risk_level=risk_level,
+            is_sustained_decline=is_sustained,
+            confidence=0.88,
+            key_drivers=drivers,
+            converging_complaints=converging,
+            expert_opinion=opinion,
+            recommended_actions=actions,
+        )
+
+
+MockGeminiClient = MockGeminiProvider

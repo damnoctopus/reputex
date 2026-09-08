@@ -179,3 +179,43 @@ Returns structured review authenticity scores (0-100), risk levels, and identifi
 
 ### GET `/api/crisis` & `/api/crisis/active`
 Returns active crisis alert with trigger reason, velocity, affected platforms, and suggested mitigation actions.
+
+
+---
+
+## 7. Future Reputation Deterioration Prediction (Gemini-Driven)
+
+### GET `/api/reputation/deterioration-prediction` (or `/api/v1/reputation/deterioration-prediction`)
+Asks Gemini for its expert assessment on the probability of near-term reputation deterioration (differentiating between a temporary noise blip vs a sustained decline).
+
+- **Query Parameters**:
+  - `horizon_days`: integer (default 14, min 7, max 60)
+- **Response** `200 OK`:
+  ```json
+  {
+    "business_id": "uuid",
+    "business_name": "Spice Symphony",
+    "deterioration_probability": 0.78,
+    "risk_level": "HIGH",
+    "is_sustained_decline": true,
+    "confidence": 0.88,
+    "key_drivers": [
+      "Negative feedback constitutes 35.0% of recent customer mentions",
+      "Complaints are recurring across multiple platforms (Google, Reddit, X)",
+      "Specific convergence on service quality, wait times, and staff behavior"
+    ],
+    "converging_complaints": [
+      "Customer Service & Staff Behavior",
+      "Wait Time & Delays",
+      "Food Quality Consistency"
+    ],
+    "expert_opinion": "Based on recent customer mentions across platforms, Spice Symphony is showing clear indicators of a sustained reputation decline rather than an isolated blip...",
+    "recommended_actions": [
+      "Address staff behavior and front-of-house training immediately.",
+      "Publicly respond to top negative Reddit and Google reviews with empathetic resolution offers.",
+      "Monitor social mentions daily to intercept viral complaints before escalation."
+    ],
+    "evaluated_at": "2026-09-08T13:30:00Z",
+    "horizon_days": 14
+  }
+  ```

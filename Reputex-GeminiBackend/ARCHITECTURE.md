@@ -72,3 +72,11 @@ To ensure reproducibility and reliability, mathematical calculations are perform
 
 ### E. Isolated Research Module
 - The `research/` directory (`feature_engineering.py`, `baselines.py`, `crisis_model.py`, `evaluation.py`, `explainability.py`) remains completely decoupled from production runtime services.
+
+
+### F. Future Reputation Deterioration Prediction (Pure Gemini Reasoning)
+Inspired by the core research question from TTRF-Net (*"Is a run of bad reviews just a blip or the start of a sustained reputation decline?"*), this feature prompts Gemini directly with the business's longitudinal review dynamics across Google, Reddit, and X.
+- **Pure LLM Evaluation**: Eliminates manual matrix operations and mathematical equations in Python.
+- **Blip vs. Sustained Trajectory**: Evaluates whether negative feedback is an isolated noise event or systemic downward momentum.
+- **Topical Convergence**: Identifies whether complaints are coalescing around specific operational failure modes.
+- **Actionable Mitigation**: Directly generates practical steps to prevent near-term deterioration.

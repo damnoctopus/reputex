@@ -1,3 +1,4 @@
+import asyncio
 """Centralized Google Gemini Client with Google Search Grounding & structured batching."""
 import json
 import logging
@@ -198,3 +199,73 @@ Provide only the finalized response text without preamble."""
         except Exception as e:
             logger.error(f"Failed to generate response draft: {e}")
             return f"Thank you for reaching out to {business_name}. We take your feedback seriously and are actively working to address this issue."
+
+    async def assess_reputation_deterioration(
+        self,
+        business_name: str,
+        business_category: str,
+        review_summary: str,
+        recent_reviews: list[dict],
+        horizon_days: int = 14,
+    ) -> GeminiDeteriorationResponse:
+        """Ask Gemini for its expert assessment on near-term reputation deterioration risk.
+
+        Evaluates chronological customer reviews across Google, Reddit, and X to assess whether
+        negative feedback is an isolated, temporary blip or the start of a sustained decline.
+        """
+        from app.schemas.gemini import GeminiDeteriorationResponse
+
+        if settings.USE_MOCK_GEMINI or not self._client:
+            from app.ai.mock_gemini import MockGeminiClient
+            mock = MockGeminiClient()
+            return await mock.assess_reputation_deterioration(
+                business_name, business_category, review_summary, recent_reviews, horizon_days
+            )
+
+        reviews_text = "\n".join(
+            f"[{r.get('platform', 'unknown').upper()}] {r.get('author', 'Anonymous')}: {r.get('content', '')} (Rating: {r.get('rating', 'N/A')})"
+            for r in recent_reviews[:30]
+        )
+
+        prompt = f"""You are an elite corporate reputation intelligence analyst.
+Analyze the following customer review history and recent public mentions across Google, Reddit, and X for the business "{business_name}" (Category: {business_category}).
+
+Summary of recent review dynamics:
+{review_summary}
+
+Recent public mentions / customer reviews:
+{reviews_text}
+
+Task:
+In your professional opinion:
+1. What is the probability (from 0.00 to 1.00) that this business will experience near-term reputation deterioration in the next {horizon_days} days?
+2. Is this recent negative feedback merely an isolated, temporary blip (noise), or does it signal the beginning of a sustained reputation decline?
+3. What are the key warning signs and drivers (e.g., service breakdown, recurring quality defects, staff issues, or coordinated backlash)?
+4. What specific issues or complaints are customers converging around?
+5. Provide your detailed expert opinion explaining your analytical reasoning.
+6. What practical mitigation steps should the owner take immediately?
+
+Respond in strictly valid JSON conforming to the requested schema.
+"""
+        try:
+            from google.genai import types
+            response = await asyncio.to_thread(
+                self._client.models.generate_content,
+                model=self.model_name,
+                contents=prompt,
+                config=types.GenerateContentConfig(
+                    response_mime_type="application/json",
+                    response_schema=GeminiDeteriorationResponse,
+                    temperature=0.2,
+                ),
+            )
+            return GeminiDeteriorationResponse.model_validate_json(response.text)
+        except Exception as e:
+            logger.warning("Gemini deterioration assessment failed: %s. Falling back to mock.", e)
+            from app.ai.mock_gemini import MockGeminiClient
+            return await MockGeminiClient().assess_reputation_deterioration(
+                business_name, business_category, review_summary, recent_reviews, horizon_days
+            )
+
+
+gemini_client = GeminiClient()

@@ -1,3 +1,4 @@
+from app.services.deterioration_service import DeteriorationService
 """Dashboard and analytics endpoints matching Flutter DashboardRepository."""
 from typing import List
 from fastapi import APIRouter, Depends, Query
@@ -118,6 +119,7 @@ async def get_dashboard_summary(
         active_clusters_count=active_clusters_count,
         top_issues=top_issues,
         recent_mentions=recent_mentions,
+        deterioration_assessment=await DeteriorationService.get_deterioration_assessment(db, str(biz.id)),
     )
 
 

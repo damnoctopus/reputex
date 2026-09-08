@@ -11,6 +11,7 @@ from app.api.v1.issues import router as issues_router
 from app.api.v1.keywords import router as keywords_router
 from app.api.v1.mentions import router as mentions_router
 from app.api.v1.responses import router as responses_router
+from app.api.v1.deterioration import router as deterioration_router
 
 api_v1_router = APIRouter()
 
@@ -25,3 +26,20 @@ api_v1_router.include_router(fraud_router)
 api_v1_router.include_router(crisis_router)
 api_v1_router.include_router(alerts_router)
 api_v1_router.include_router(responses_router)
+api_v1_router.include_router(deterioration_router)
+
+__all__ = [
+    "api_v1_router",
+    "auth_router",
+    "business_router",
+    "keywords_router",
+    "dashboard_router",
+    "mentions_router",
+    "issues_router",
+    "findings_router",
+    "fraud_router",
+    "crisis_router",
+    "alerts_router",
+    "responses_router",
+    "deterioration_router",
+]

@@ -1,3 +1,4 @@
+from app.schemas.deterioration import DeteriorationAssessment
 """Dashboard summary and analytics schemas matching Flutter models."""
 from datetime import datetime
 from typing import Any, Dict, List, Optional
@@ -52,3 +53,4 @@ class DashboardSummary(BaseModel):
     active_clusters_count: int = 0
     top_issues: List[Dict[str, Any]] = Field(default_factory=list)
     recent_mentions: List[MentionResponse] = Field(default_factory=list)
+    deterioration_assessment: Optional[DeteriorationAssessment] = None
