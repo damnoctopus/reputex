@@ -8,7 +8,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.acquisition.gemini_search_provider import GeminiSearchProvider
 from app.core.database import AsyncSessionLocal
 from app.core.exceptions import NotFoundError
-from app.models.business import Business
+from app.models.business import Business, BrandKeyword
 from app.models.scan import Scan
 from app.schemas.scan import ScanStatusResponse, ScanTriggerResponse
 from app.services.authenticity_service import ReviewAuthenticityService
@@ -76,7 +76,8 @@ class ScanService:
             biz = await db.get(Business, business_id)
             biz_name = biz.name if biz else "Spice Symphony"
             biz_loc = biz.location if biz else None
-            keywords = [k.keyword for k in (biz.keywords or [])] if biz else []
+            kw_res = await db.execute(select(BrandKeyword.keyword).where(BrandKeyword.business_id == business_id))
+            keywords = list(kw_res.scalars().all())
 
             # Step 2: ACQUIRING
             scan.status = "ACQUIRING"
